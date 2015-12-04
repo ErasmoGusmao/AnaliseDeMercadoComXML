@@ -1,0 +1,9 @@
+C:\Users\Erasmo\Documents\GitHub\AnaliseMercado\FormatarHistóricoCotações\FormatarHistóricoCotações\bin\Debug\FormatarHistóricoCotações.exe.config
+C:\Users\Erasmo\Documents\GitHub\AnaliseMercado\FormatarHistóricoCotações\FormatarHistóricoCotações\bin\Debug\FormatarHistóricoCotações.exe
+C:\Users\Erasmo\Documents\GitHub\AnaliseMercado\FormatarHistóricoCotações\FormatarHistóricoCotações\bin\Debug\FormatarHistóricoCotações.pdb
+C:\Users\Erasmo\Documents\GitHub\AnaliseMercado\FormatarHistóricoCotações\FormatarHistóricoCotações\obj\Debug\FormatarHistóricoCotações.csprojResolveAssemblyReference.cache
+C:\Users\Erasmo\Documents\GitHub\AnaliseMercado\FormatarHistóricoCotações\FormatarHistóricoCotações\obj\Debug\FormatarHistóricoCotações.Form1.resources
+C:\Users\Erasmo\Documents\GitHub\AnaliseMercado\FormatarHistóricoCotações\FormatarHistóricoCotações\obj\Debug\FormatarHistóricoCotações.Properties.Resources.resources
+C:\Users\Erasmo\Documents\GitHub\AnaliseMercado\FormatarHistóricoCotações\FormatarHistóricoCotações\obj\Debug\FormatarHistóricoCotações.csproj.GenerateResource.Cache
+C:\Users\Erasmo\Documents\GitHub\AnaliseMercado\FormatarHistóricoCotações\FormatarHistóricoCotações\obj\Debug\FormatarHistóricoCotações.exe
+C:\Users\Erasmo\Documents\GitHub\AnaliseMercado\FormatarHistóricoCotações\FormatarHistóricoCotações\obj\Debug\FormatarHistóricoCotações.pdb
