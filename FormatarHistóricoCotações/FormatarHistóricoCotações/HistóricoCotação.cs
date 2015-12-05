@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Globalization;
 using System.Collections;
+using System.Xml;
 
 namespace FormatarHistóricoCotações
 {
@@ -233,6 +234,11 @@ namespace FormatarHistóricoCotações
             {
                 MessageBox.Show("Caminho do arquivo histórico não informado!", "Sua execução foi invalidada!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }           
+        }
+
+        private void FormatarArquivoXML(string caminhoDoArquivo, string caminhoParaSalvarArquivo) 
+        { 
+        
         }
 
         private void CabeçalhoArquivo(string salvarComo)
