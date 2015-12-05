@@ -40,21 +40,21 @@ namespace FormatarHistóricoCotações
             }
 
             histórico.ConcatenaArquivos(CaminhoDoDiretorio);
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
-            listBox1.Items.Clear(); //Limpo
-            foreach (string item in açãoSelect.PegaNomeAçao(CaminhoParaSalvarArqivo))
-            {
-                listBox1.Items.Add(item);
-            }
-            label1.Text = "(" + açãoSelect.ListaDeAção(CaminhoParaSalvarArqivo).Count + ") ações ";
-            MessageBox.Show("Concatenação completa!!");
-        }
+//            listBox1.Items.Clear(); //Limpo
+//            foreach (string item in açãoSelect.PegaNomeAçao(CaminhoParaSalvarArqivo))
+//            {
+//                listBox1.Items.Add(item);
+//            }
+//            label1.Text = "(" + açãoSelect.ListaDeAção(CaminhoParaSalvarArqivo).Count + ") ações ";
+//            MessageBox.Show("Concatenação completa!!");
+//        }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-=======
->>>>>>> parent of 45b9a27... Criado a Classe AçãoSelec
+//        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+//        {
+//=======
+//>>>>>>> parent of 45b9a27... Criado a Classe AçãoSelec
         }
     }
 }

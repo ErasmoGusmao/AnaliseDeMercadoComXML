@@ -12,7 +12,7 @@ namespace FormatarHistóricoCotações
 {
     class HistóricoCotação
     {
-        private bool invaliadação = false;
+        private bool invaliadação = false; // verificador deve está somente no método de UnificaçãoDadosBrutos
 
         public void ConcatenaArquivos(string caminhoDoDiretorio) 
         {
@@ -23,37 +23,52 @@ namespace FormatarHistóricoCotações
                 if (VerNomeArquivo(caminhoDoDiretorio))                                                                     //Método que verifiar se os arquivos dos diretórios informados são todos válidos retorna um bool true ou false
                 {
                     string caminhoSalvar = caminhoDoDiretorio + @"\Histórico Concatenado";
-                    string salvarComo = caminhoSalvar + @"\HistóricoConcatenado.txt";
+                    string salvarComoDadosBrutos = caminhoSalvar + @"\9999.txt"; //Salva um arquivo de dados brutos temporário com um formato válido
+                    string salvarComoDadosFormatadosTXT = caminhoSalvar + @"\HistóricoConcatenado.txt";
 
                     //Bloco que verifica a existência ou não do diretório onde será salvo o arquivo concatenado "caminhoSalva"
-                    if (!Directory.Exists(caminhoSalvar))
+                    if (Directory.Exists(caminhoSalvar))
+                    {
+                        Directory.Delete(caminhoSalvar);
+                    }else if (!Directory.Exists(caminhoSalvar))
                     {
                         Directory.CreateDirectory(caminhoSalvar);
-                    }
-                    if (File.Exists(salvarComo))
+                    } 
+                    
+                    if (File.Exists(salvarComoDadosBrutos))
                     {
-                        File.Delete(salvarComo);
+                        File.Delete(salvarComoDadosBrutos);
                     }
-                    //Cabeçalho do arquivo concatenado
+                    if (File.Exists(salvarComoDadosFormatadosTXT))
+                    {
+                        File.Delete(salvarComoDadosFormatadosTXT);
+                    }
 
-                    CabeçalhoArquivo(salvarComo);
-
-                    //Bloco que concatena os arquivos do diretório "caminhoDoDiretorio" passado para esse método           
+                    //Bloco que unifica os dados brutos em um unico arquivo temporário 9999.txt           
                     foreach (string arq in arquivos)
                     {
                         Console.WriteLine(arq);
-                        FormatarArquivo(arq, salvarComo);
+                        UnificaDadosBrutosTXT(arq,salvarComoDadosBrutos);
                     }
+
+                    //Cabeçalho do arquivo concatenado
+                    CabeçalhoArquivo(salvarComoDadosFormatadosTXT);
+
+                    //Bloco que formata o arquivo bruto concatenado do diretório "salvarComoDadosBrutos" (nome completo "C:\User\...\9999.txt") passado para esse método 
+                    FormatarArquivoTXT(salvarComoDadosBrutos, salvarComoDadosFormatadosTXT);
+
                     //Bloco que verifica a validade do formato dos arquivos lidos
                     if (invaliadação)
                     {
-                        DeleteArquivo(salvarComo); //Deletar pasta onde o arquivo concatenado seria criado
+                        DeleteArquivo(salvarComoDadosFormatadosTXT); //Deletar pasta onde o arquivo concatenado seria criado
+                        DeleteArquivo(salvarComoDadosBrutos);        //Deletar pasta onde o arquivo com dados brutos concatenado seria criado
                         Console.WriteLine("Concatenação incompleta!");
                         MessageBox.Show("Concatenação incompleta!", "Operação abortada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         invaliadação = false;
                     }
                     else
                     {
+                        DeleteArquivo(salvarComoDadosBrutos);        //Deletar pasta onde o arquivo com dados brutos concatenado seria criado (Arquivo temporário)
                         Console.WriteLine("Concatenação completa!!");
                     }
                 }
@@ -69,7 +84,79 @@ namespace FormatarHistóricoCotações
             }
         }
 
-        private void FormatarArquivo(string caminhoDoArquivo, string caminhoParaSalvarArqivo)
+        private void UnificaDadosBrutosTXT(string caminhoDosDadosBrutos, string salvarComoDadosBrutos)
+        {
+            try
+            {
+                try
+                {
+                    using (StreamReader reader = new StreamReader(caminhoDosDadosBrutos))
+                    {
+                        using (StreamWriter writer = new StreamWriter(salvarComoDadosBrutos, true)) //true não sobrescreve no arquivo; false sobrescreve
+                        {
+                            try
+                            {
+                                while (!reader.EndOfStream)
+                                {
+                                    string LinhaDoArquivo = reader.ReadLine();
+                                    switch (LinhaDoArquivo.Substring(0, 2))
+                                    {
+                                        case "00":
+                                            //Não escreve nada
+                                            break;
+
+                                        case "01":
+                                            
+                                            //Faz a conversão dos valores de data e preço caso o formato do arquivo esteja errado para um desses valores
+                                            //irá gerar uma exceção que será tratada
+
+                                            //Tratamento dos valores de datas lidos
+                                            DateTime DataPregão = DateTime.ParseExact(LinhaDoArquivo.Substring(2, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do pregão
+                                            DateTime DataVencimentoOpções = DateTime.ParseExact(LinhaDoArquivo.Substring(202, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do vencimento de Opções
+
+                                            //Tratamento dos valores de cotações lidos
+                                            decimal PreçoAbertura = decimal.Parse(LinhaDoArquivo.Substring(56, 13)) / 100;
+                                            decimal PreçoMáximo = decimal.Parse(LinhaDoArquivo.Substring(69, 13)) / 100;
+                                            decimal PreçoMínimo = decimal.Parse(LinhaDoArquivo.Substring(82, 13)) / 100;
+                                            decimal PreçoMédio = decimal.Parse(LinhaDoArquivo.Substring(95, 13)) / 100;
+                                            decimal PreçoAnterior = decimal.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
+                                            decimal PreçoMelhorCompra = decimal.Parse(LinhaDoArquivo.Substring(121, 13)) / 100;
+                                            decimal PreçoMelhorVenda = decimal.Parse(LinhaDoArquivo.Substring(134, 13)) / 100;
+                                            decimal VolumeTotalNegociado = decimal.Parse(LinhaDoArquivo.Substring(170, 18)) / 100;
+                                            decimal PreçoExercício = decimal.Parse(LinhaDoArquivo.Substring(188, 13)) / 100;
+
+                                            writer.WriteLine(LinhaDoArquivo); //Copia a linha do arquivo
+                                            break;
+
+                                        case "99":
+                                            //Não escreve nada
+                                            break;
+                                    }
+                                }
+                            }
+                            catch (FormatException)//Verifica a validação do arquivo
+                            {
+                                FileInfo infoFile = new FileInfo(Path.GetFullPath(caminhoDosDadosBrutos));
+                                MessageBox.Show("Incapaz de ler arquivo " + infoFile.Name + ", pois está formatado errado!", "Sua execução foi invalidada!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                invaliadação = true; //Deleta pasta do arquivo concatenado
+                            }
+                        }
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                    MessageBox.Show("ARQUIVO NÃO ENCONTRADO!", "Sua execução foi invalidada!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    invaliadação = true; //Deleta pasta do arquivo concatenado
+                }
+            }
+            catch (ArgumentNullException)
+            {
+                MessageBox.Show("Caminho do arquivo histórico não informado!", "Sua execução foi invalidada!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }           
+        
+        }
+
+        private void FormatarArquivoTXT(string caminhoDoArquivo, string caminhoParaSalvarArqivo)
         {
             try
             {
@@ -127,7 +214,7 @@ namespace FormatarHistóricoCotações
                                     }
                                 }
                             }
-                            catch (FormatException)
+                            catch (FormatException)//Verifica a validação do arquivo
                             {
                                 FileInfo infoFile = new FileInfo(Path.GetFullPath(caminhoDoArquivo));
                                 MessageBox.Show("Incapaz de ler arquivo " + infoFile.Name + ", pois está formatado errado!", "Sua execução foi invalidada!", MessageBoxButtons.OK, MessageBoxIcon.Error);
