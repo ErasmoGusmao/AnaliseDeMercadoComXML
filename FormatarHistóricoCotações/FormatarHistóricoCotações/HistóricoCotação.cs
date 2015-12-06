@@ -8,6 +8,7 @@ using System.IO;
 using System.Globalization;
 using System.Collections;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace FormatarHistóricoCotações
 {
@@ -372,7 +373,7 @@ namespace FormatarHistóricoCotações
         private void CabeçalhoArquivo(string salvarComo)
         {
             using (StreamWriter writer = new StreamWriter(salvarComo, false)) {
-                writer.WriteLine("TIPREG\tDATA\tCODBDI\tCODNEG\tTPMERC\tNOMRES\tESPECI\tPRAZOT\tMODREF\tP.Abe\tP.Max\tP.Min\tP.Med\tP.Ant\tP.Ult\tP.OFC\tP.OFV\tTotal NEG.\tQt.Total\tVolume Total\tP.EXE\tINDOPC\tDATA VENC.\tFATCOT\tPTOEXE\tCODISI\tDISMES");  //Escreve o Cabeçalho
+                writer.WriteLine("DATA\tCODNEG\tNOME\tESPECI\tMOEDAF\tP.Abe\tP.Max\tP.Min\tP.Med\tP.Ant\tP.Ult\tP.OFC\tP.OFV\tTotal NEG.\tQt.Total\tVolume");  //Escreve o Cabeçalho
             } 
         }
 
