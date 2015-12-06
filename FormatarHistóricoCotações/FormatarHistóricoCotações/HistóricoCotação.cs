@@ -14,8 +14,36 @@ namespace FormatarHistóricoCotações
     class HistóricoCotação
     {
         private bool invaliadação = false; // verificador deve está somente no método de UnificaçãoDadosBrutos
+        private List<string> especiPapel = new List<string>();
 
-        public void ConcatenaArquivos(string caminhoDoDiretorio) 
+        private void IniciaListaESPECI() //Filtra os dados brutos tratados somente para determinadas especifiações de papel
+        {
+            especiPapel.Add("ON ");
+            especiPapel.Add("PN ");
+            especiPapel.Add("PNA");
+            especiPapel.Add("PNB");
+            especiPapel.Add("PNC");
+            especiPapel.Add("PND");
+            especiPapel.Add("PNE");
+            especiPapel.Add("PNF");
+            especiPapel.Add("PNG");
+            especiPapel.Add("PNH");
+            especiPapel.Add("PNV");
+            especiPapel.Add("OR ");
+            especiPapel.Add("PRA");
+            especiPapel.Add("PRB");
+            especiPapel.Add("PRC");
+            especiPapel.Add("PRD");
+            especiPapel.Add("PRE");
+            especiPapel.Add("PRF");
+            especiPapel.Add("PRG");
+            especiPapel.Add("PRH");
+            especiPapel.Add("PNR");
+            especiPapel.Add("PRV");
+            especiPapel.Add("PR ");
+        }
+
+        public void ConcatenaArquivos(string caminhoDoDiretorio, bool tipoDeSaida) 
         {
             try
             {
@@ -25,13 +53,9 @@ namespace FormatarHistóricoCotações
                 {
                     string caminhoSalvar = caminhoDoDiretorio + @"\Histórico Concatenado";
                     string salvarComoDadosBrutos = caminhoSalvar + @"\9999.txt"; //Salva um arquivo de dados brutos temporário com um formato válido
-                    string salvarComoDadosFormatadosTXT = caminhoSalvar + @"\HistóricoConcatenado.txt";
 
                     //Bloco que verifica a existência ou não do diretório onde será salvo o arquivo concatenado "caminhoSalva"
-                    if (Directory.Exists(caminhoSalvar))
-                    {
-                        Directory.Delete(caminhoSalvar);
-                    }else if (!Directory.Exists(caminhoSalvar))
+                    if (!Directory.Exists(caminhoSalvar))
                     {
                         Directory.CreateDirectory(caminhoSalvar);
                     } 
@@ -40,37 +64,71 @@ namespace FormatarHistóricoCotações
                     {
                         File.Delete(salvarComoDadosBrutos);
                     }
-                    if (File.Exists(salvarComoDadosFormatadosTXT))
-                    {
-                        File.Delete(salvarComoDadosFormatadosTXT);
-                    }
-
+                    
                     //Bloco que unifica os dados brutos em um unico arquivo temporário 9999.txt           
                     foreach (string arq in arquivos)
                     {
                         Console.WriteLine(arq);
-                        UnificaDadosBrutosTXT(arq,salvarComoDadosBrutos);
+                        UnificaDadosBrutosTXT(arq, salvarComoDadosBrutos);
                     }
 
-                    //Cabeçalho do arquivo concatenado
-                    CabeçalhoArquivo(salvarComoDadosFormatadosTXT);
-
-                    //Bloco que formata o arquivo bruto concatenado do diretório "salvarComoDadosBrutos" (nome completo "C:\User\...\9999.txt") passado para esse método 
-                    FormatarArquivoTXT(salvarComoDadosBrutos, salvarComoDadosFormatadosTXT);
-
-                    //Bloco que verifica a validade do formato dos arquivos lidos
-                    if (invaliadação)
+                    if (tipoDeSaida) //Se verdade -> saída no formato *.txt
                     {
-                        DeleteArquivo(salvarComoDadosFormatadosTXT); //Deletar pasta onde o arquivo concatenado seria criado
-                        DeleteArquivo(salvarComoDadosBrutos);        //Deletar pasta onde o arquivo com dados brutos concatenado seria criado
-                        Console.WriteLine("Concatenação incompleta!");
-                        MessageBox.Show("Concatenação incompleta!", "Operação abortada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        invaliadação = false;
+                    string salvarComoDadosFormatadosTXT = caminhoSalvar + @"\HistóricoConcatenado.txt";
+                    
+                        if (File.Exists(salvarComoDadosFormatadosTXT))
+                        {
+                            File.Delete(salvarComoDadosFormatadosTXT);
+                        }                 
+                        //Cabeçalho do arquivo concatenado
+                        CabeçalhoArquivo(salvarComoDadosFormatadosTXT);
+
+                        //Bloco que formata o arquivo bruto concatenado do diretório "salvarComoDadosBrutos" (nome completo "C:\User\...\9999.txt") em arquivo.txt
+                        FormatarArquivoTXT(salvarComoDadosBrutos, salvarComoDadosFormatadosTXT);
+
+                        //Bloco que verifica a validade do formato dos arquivos lidos
+                        if (invaliadação)
+                        {
+                            DeleteArquivo(salvarComoDadosFormatadosTXT); //Deletar pasta onde o arquivo concatenado seria criado
+                            DeleteArquivo(salvarComoDadosBrutos);        //Deletar pasta onde o arquivo com dados brutos concatenado seria criado
+                            Console.WriteLine("Concatenação incompleta!");
+                            MessageBox.Show("Concatenação incompleta!", "Operação abortada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            invaliadação = false;
+                        }
+                        else
+                        {
+                            DeleteArquivo(salvarComoDadosBrutos);        //Deletar pasta onde o arquivo com dados brutos concatenado seria criado (Arquivo temporário)
+                            MessageBox.Show("Concatenação completa!!");
+                            Console.WriteLine("Concatenação completa!!");
+                        }
                     }
-                    else
+                    else //Se falso -> saída no formato *.xml
                     {
-                        DeleteArquivo(salvarComoDadosBrutos);        //Deletar pasta onde o arquivo com dados brutos concatenado seria criado (Arquivo temporário)
-                        Console.WriteLine("Concatenação completa!!");
+                        string salvarComoDadosFormatadosXML = caminhoSalvar + @"\HistóricoConcatenado.xml";
+
+                    if (File.Exists(salvarComoDadosFormatadosXML))
+                    {
+                        File.Delete(salvarComoDadosFormatadosXML);
+                    }
+
+                        //Bloco que formata o arquivo bruto concatenado do diretório "salvarComoDadosBrutos" (nome completo "C:\User\...\9999.txt") em arquivo.xml
+                        FormatarArquivoXML(salvarComoDadosBrutos,salvarComoDadosFormatadosXML);
+
+                        //Bloco que verifica a validade do formato dos arquivos lidos
+                        if (invaliadação)
+                        {
+                            DeleteArquivo(salvarComoDadosFormatadosXML); //Deletar pasta onde o arquivo concatenado seria criado
+                            DeleteArquivo(salvarComoDadosBrutos);        //Deletar pasta onde o arquivo com dados brutos concatenado seria criado
+                            Console.WriteLine("Concatenação incompleta!");
+                            MessageBox.Show("Concatenação incompleta!", "Operação abortada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            invaliadação = false;
+                        }
+                        else
+                        {
+                            DeleteArquivo(salvarComoDadosBrutos);        //Deletar pasta onde o arquivo com dados brutos concatenado seria criado (Arquivo temporário)
+                            MessageBox.Show("Concatenação completa!!");
+                            Console.WriteLine("Concatenação completa!!");
+                        }
                     }
                 }
                 else
@@ -97,43 +155,43 @@ namespace FormatarHistóricoCotações
                         {
                             try
                             {
+                                IniciaListaESPECI();
+
                                 while (!reader.EndOfStream)
                                 {
                                     string LinhaDoArquivo = reader.ReadLine();
-                                    switch (LinhaDoArquivo.Substring(0, 2))
+                                    if (LinhaDoArquivo.Substring(0, 2) =="01")
                                     {
-                                        case "00":
-                                            //Não escreve nada
-                                            break;
+                                            if (LinhaDoArquivo.Substring(24, 3).ToString()=="010") //Se o tipo de mercado for Mercado Vista ele copia linha caso contrário pula
+                                            {
+                                                if (especiPapel.Contains(LinhaDoArquivo.Substring(39, 3).ToString())) //Verifica ESPECIFICAÇÃO DO PAPEL está contida na lista
+                                                {
+                                                    
+                                                //Faz a conversão dos valores de data e preço caso o formato do arquivo esteja errado para um desses valores
+                                                //irá gerar uma exceção que será tratada
 
-                                        case "01":
-                                            
-                                            //Faz a conversão dos valores de data e preço caso o formato do arquivo esteja errado para um desses valores
-                                            //irá gerar uma exceção que será tratada
+                                                //Tratamento dos valores de datas lidos
+                                                DateTime DataPregão = DateTime.ParseExact(LinhaDoArquivo.Substring(2, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do pregão
+                                                DateTime DataVencimentoOpções = DateTime.ParseExact(LinhaDoArquivo.Substring(202, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do vencimento de Opções
 
-                                            //Tratamento dos valores de datas lidos
-                                            DateTime DataPregão = DateTime.ParseExact(LinhaDoArquivo.Substring(2, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do pregão
-                                            DateTime DataVencimentoOpções = DateTime.ParseExact(LinhaDoArquivo.Substring(202, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do vencimento de Opções
+                                                //Tratamento dos valores de cotações lidos
+                                                decimal PreçoAbertura = decimal.Parse(LinhaDoArquivo.Substring(56, 13)) / 100;
+                                                decimal PreçoMáximo = decimal.Parse(LinhaDoArquivo.Substring(69, 13)) / 100;
+                                                decimal PreçoMínimo = decimal.Parse(LinhaDoArquivo.Substring(82, 13)) / 100;
+                                                decimal PreçoMédio = decimal.Parse(LinhaDoArquivo.Substring(95, 13)) / 100;
+                                                decimal PreçoAnterior = decimal.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
+                                                decimal PreçoMelhorCompra = decimal.Parse(LinhaDoArquivo.Substring(121, 13)) / 100;
+                                                decimal PreçoMelhorVenda = decimal.Parse(LinhaDoArquivo.Substring(134, 13)) / 100;
+                                                decimal VolumeTotalNegociado = decimal.Parse(LinhaDoArquivo.Substring(170, 18)) / 100;
+                                                decimal PreçoExercício = decimal.Parse(LinhaDoArquivo.Substring(188, 13)) / 100;
 
-                                            //Tratamento dos valores de cotações lidos
-                                            decimal PreçoAbertura = decimal.Parse(LinhaDoArquivo.Substring(56, 13)) / 100;
-                                            decimal PreçoMáximo = decimal.Parse(LinhaDoArquivo.Substring(69, 13)) / 100;
-                                            decimal PreçoMínimo = decimal.Parse(LinhaDoArquivo.Substring(82, 13)) / 100;
-                                            decimal PreçoMédio = decimal.Parse(LinhaDoArquivo.Substring(95, 13)) / 100;
-                                            decimal PreçoAnterior = decimal.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
-                                            decimal PreçoMelhorCompra = decimal.Parse(LinhaDoArquivo.Substring(121, 13)) / 100;
-                                            decimal PreçoMelhorVenda = decimal.Parse(LinhaDoArquivo.Substring(134, 13)) / 100;
-                                            decimal VolumeTotalNegociado = decimal.Parse(LinhaDoArquivo.Substring(170, 18)) / 100;
-                                            decimal PreçoExercício = decimal.Parse(LinhaDoArquivo.Substring(188, 13)) / 100;
-
-                                            writer.WriteLine(LinhaDoArquivo); //Copia a linha do arquivo
-                                            break;
-
-                                        case "99":
-                                            //Não escreve nada
-                                            break;
+                                                writer.WriteLine(LinhaDoArquivo); //Copia a linha do arquivo
+                                                }
+                                            }
                                     }
                                 }
+
+                                especiPapel.Clear(); // Limpa a lista
                             }
                             catch (FormatException)//Verifica a validação do arquivo
                             {
@@ -173,15 +231,7 @@ namespace FormatarHistóricoCotações
                                 while (!reader.EndOfStream)
                                 {
                                     string LinhaDoArquivo = reader.ReadLine();
-                                    switch (LinhaDoArquivo.Substring(0, 2))
-                                    {
-                                        case "00":
-                                            //Não escreve nada
-                                            //DateTime DataGeraçãoArquivo = DateTime.ParseExact(LinhaDoArquivo.Substring(23, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Converte um String em DateTime do cabeçalho
-                                            //writer.WriteLine(LinhaDoArquivo.Substring(0, 2) + "\t" + LinhaDoArquivo.Substring(2, 13) + "\t" + LinhaDoArquivo.Substring(15, 8) + "\t" + DataGeraçãoArquivo.ToString("dd/mm/yyyy") + "\t" + LinhaDoArquivo.Substring(31, 214));  //Escreve o Cabeçalho
-                                            break;
 
-                                        case "01":
                                             DateTime DataPregão = DateTime.ParseExact(LinhaDoArquivo.Substring(2, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do pregão
                                             DateTime DataVencimentoOpções = DateTime.ParseExact(LinhaDoArquivo.Substring(202, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do vencimento de Opções
 
@@ -196,23 +246,15 @@ namespace FormatarHistóricoCotações
                                             decimal VolumeTotalNegociado = decimal.Parse(LinhaDoArquivo.Substring(170, 18)) / 100;
                                             decimal PreçoExercício = decimal.Parse(LinhaDoArquivo.Substring(188, 13)) / 100;
 
-                                            writer.WriteLine(LinhaDoArquivo.Substring(0, 2) + "\t" + DataPregão.ToString("dd/mm/yyyy") + "\t" + LinhaDoArquivo.Substring(10, 2)
-                                        + "\t" + LinhaDoArquivo.Substring(12, 12) + "\t" + LinhaDoArquivo.Substring(24, 3) + "\t" + LinhaDoArquivo.Substring(27, 12)
-                                        + "\t" + LinhaDoArquivo.Substring(39, 10) + "\t" + LinhaDoArquivo.Substring(49, 3) + "\t" + LinhaDoArquivo.Substring(52, 4)
+                                            writer.WriteLine(/*LinhaDoArquivo.Substring(0, 2) + "\t" + */DataPregão.ToString("dd/mm/yyyy") + "\t" +/*+ LinhaDoArquivo.Substring(10, 2)
+                                        + "\t" + */LinhaDoArquivo.Substring(12, 12) + "\t" + /*LinhaDoArquivo.Substring(24, 3) + "\t" + */LinhaDoArquivo.Substring(27, 12)
+                                        + "\t" + LinhaDoArquivo.Substring(39, 10) + "\t" + /*LinhaDoArquivo.Substring(49, 3) + "\t" + */LinhaDoArquivo.Substring(52, 4)
                                         + "\t" + PreçoAbertura.ToString() + "\t" + PreçoMáximo.ToString() + "\t" + PreçoMínimo.ToString()
                                         + "\t" + PreçoMédio.ToString() + "\t" + PreçoAnterior.ToString() + "\t" + PreçoMelhorCompra.ToString()
                                         + "\t" + PreçoMelhorVenda.ToString() + "\t" + LinhaDoArquivo.Substring(147, 5) + "\t" + LinhaDoArquivo.Substring(152, 18)
-                                        + "\t" + VolumeTotalNegociado.ToString() + "\t" + PreçoExercício.ToString() + "\t" + LinhaDoArquivo.Substring(201, 1)
+                                        + "\t" + VolumeTotalNegociado.ToString() + "\t" /*+ PreçoExercício.ToString() + "\t" + LinhaDoArquivo.Substring(201, 1)
                                         + "\t" + DataVencimentoOpções.ToString("dd/mm/yyyy") + "\t" + LinhaDoArquivo.Substring(210, 7) + "\t" + LinhaDoArquivo.Substring(217, 7)
-                                        + "\t" + LinhaDoArquivo.Substring(230, 12) + "\t" + LinhaDoArquivo.Substring(242, 3));
-                                            break;
-
-                                        case "99":
-                                            //Não escreve nada
-                                            //DateTime DataGeraçãoArquivoFim = DateTime.ParseExact(LinhaDoArquivo.Substring(23, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Converte um String em DateTime do fim do arquivo
-                                            //writer.WriteLine(LinhaDoArquivo.Substring(0, 2) + "\t" + LinhaDoArquivo.Substring(2, 13) + "\t" + LinhaDoArquivo.Substring(15, 8) + "\t" + DataGeraçãoArquivoFim.ToString("dd/mm/yyyy") + "\t" + LinhaDoArquivo.Substring(31, 11) + "\t" + LinhaDoArquivo.Substring(42, 203));  //Escreve o Cabeçalho
-                                            break;
-                                    }
+                                        + "\t" + LinhaDoArquivo.Substring(230, 12) + "\t" + LinhaDoArquivo.Substring(242, 3)*/);
                                 }
                             }
                             catch (FormatException)//Verifica a validação do arquivo
@@ -237,14 +279,100 @@ namespace FormatarHistóricoCotações
         }
 
         private void FormatarArquivoXML(string caminhoDoArquivo, string caminhoParaSalvarArquivo) 
-        { 
-        
+        {
+            try
+            {
+                try
+                {
+                    using (StreamReader reader = new StreamReader(caminhoDoArquivo))
+                    {
+                            try
+                            {
+                                using (XmlTextWriter writerXml = new XmlTextWriter(caminhoParaSalvarArquivo, null)) //Salva o arquivo Xml no caminho informado
+                                {
+
+                                    writerXml.WriteStartDocument();                                         //Inicia o documento XML
+                                    writerXml.Formatting = Formatting.Indented;                                 //Usa a formatação
+                                    writerXml.WriteStartElement("PAPEIS");                                   //Escreve o elemento Raiz
+
+                                    while (!reader.EndOfStream)                                                 //Converte arquivo 9999.txt até o final
+                                    {
+                                        string LinhaDoArquivo = reader.ReadLine();                              //Ler linha
+
+                                        //Tratamento dos das datas
+                                        DateTime DataPregão = DateTime.ParseExact(LinhaDoArquivo.Substring(2, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do pregão
+                                        //                  DateTime DataVencimentoOpções = DateTime.ParseExact(LinhaDoArquivo.Substring(202, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do vencimento de Opções
+
+                                        //Tratamento dos valores de cotações lidos
+                                        decimal PreçoAbertura = decimal.Parse(LinhaDoArquivo.Substring(56, 13)) / 100;
+                                        decimal PreçoMáximo = decimal.Parse(LinhaDoArquivo.Substring(69, 13)) / 100;
+                                        decimal PreçoMínimo = decimal.Parse(LinhaDoArquivo.Substring(82, 13)) / 100;
+                                        decimal PreçoMédio = decimal.Parse(LinhaDoArquivo.Substring(95, 13)) / 100;
+                                        decimal PreçoAnterior = decimal.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
+                                        decimal PreçoMelhorCompra = decimal.Parse(LinhaDoArquivo.Substring(121, 13)) / 100;
+                                        decimal PreçoMelhorVenda = decimal.Parse(LinhaDoArquivo.Substring(134, 13)) / 100;
+                                        decimal VolumeTotalNegociado = decimal.Parse(LinhaDoArquivo.Substring(170, 18)) / 100;
+                                        decimal PreçoExercício = decimal.Parse(LinhaDoArquivo.Substring(188, 13)) / 100;
+
+                                        writerXml.WriteStartElement("PAPEL");                                   //Escreve o elemento Raiz
+
+                                        //Escreve os sub-elementos
+                                        writerXml.WriteElementString("DATA", DataPregão.ToString("dd/mm/yyyy"));
+                                        //                    writerXml.WriteElementString("COD_BDI", LinhaDoArquivo.Substring(10, 2));
+                                        writerXml.WriteElementString("CODIGO", LinhaDoArquivo.Substring(12, 12));
+                                        //                    writerXml.WriteElementString("TIPO_MERC.", LinhaDoArquivo.Substring(24, 3)); //jÁ SEI QUE O TIPO DE MERCADO É VISTA (TIPO 010)
+                                        writerXml.WriteElementString("NOME", LinhaDoArquivo.Substring(27, 12));
+                                        writerXml.WriteElementString("ESPECI", LinhaDoArquivo.Substring(39, 10));
+                                        //                    writerXml.WriteElementString("PRAZOT", LinhaDoArquivo.Substring(49, 3));
+                                        writerXml.WriteElementString("MOEDA", LinhaDoArquivo.Substring(52, 4));
+                                        writerXml.WriteElementString("P.Abr", PreçoAbertura.ToString());
+                                        writerXml.WriteElementString("P.Max", PreçoMáximo.ToString());
+                                        writerXml.WriteElementString("P.Min", PreçoMínimo.ToString());
+                                        writerXml.WriteElementString("P.Med", PreçoMédio.ToString());
+                                        writerXml.WriteElementString("P.Anterior", PreçoAnterior.ToString());
+                                        writerXml.WriteElementString("M_Compra", PreçoMelhorCompra.ToString());
+                                        writerXml.WriteElementString("M_Venda", PreçoMelhorVenda.ToString());
+                                        writerXml.WriteElementString("TOTAL_NEG.", LinhaDoArquivo.Substring(147, 5));
+                                        writerXml.WriteElementString("Quant.", LinhaDoArquivo.Substring(152, 18));
+                                        writerXml.WriteElementString("VOLUME", VolumeTotalNegociado.ToString());
+                                        //                    writerXml.WriteElementString("Pr_Exec.", PreçoExercício.ToString());
+                                        //                    writerXml.WriteElementString("INDOPC", LinhaDoArquivo.Substring(201, 1));
+                                        //                    writerXml.WriteElementString("DATA_VENCIMENTO", DataVencimentoOpções.ToString("dd/mm/yyyy"));
+                                        //                    writerXml.WriteElementString("FATCOT", LinhaDoArquivo.Substring(210, 7));  //Fator de correção para opções
+                                        //                    writerXml.WriteElementString("Pr_Exec_Ref_Dólar", LinhaDoArquivo.Substring(217, 7));
+                                        //                    writerXml.WriteElementString("COD_ISI", LinhaDoArquivo.Substring(230, 12));
+                                        //                    writerXml.WriteElementString("DISMES", LinhaDoArquivo.Substring(242, 3));
+
+                                        //Encerra os elementos itens
+                                        writerXml.WriteEndElement();
+                                    }
+                                    //writerXml.Close();                                                          //Escreve o XML para o arquivo e fecha o objeto escritor
+                                }
+                            }
+                            catch (FormatException)//Verifica a validação do arquivo
+                            {
+                                FileInfo infoFile = new FileInfo(Path.GetFullPath(caminhoDoArquivo));
+                                MessageBox.Show("Incapaz de ler arquivo " + infoFile.Name + ", pois está formatado errado!", "Sua execução foi invalidada!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                invaliadação = true; //Deleta pasta do arquivo concatenado
+                            }
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                    MessageBox.Show("ARQUIVO NÃO ENCONTRADO!", "Sua execução foi invalidada!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    invaliadação = true; //Deleta pasta do arquivo concatenado
+                }
+            }
+            catch (ArgumentNullException)
+            {
+                MessageBox.Show("Caminho do arquivo histórico não informado!", "Sua execução foi invalidada!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void CabeçalhoArquivo(string salvarComo)
         {
             using (StreamWriter writer = new StreamWriter(salvarComo, false)) {
-                writer.WriteLine("TIPREG\tDATA\tCODBDI\tCODNEG\tTPMERC\tNOMRES\tESPECI\tPRAZOT\tMODREF\tP.Abe\tP.Max\tP.Min\tP.Ult\tP.OFC\tP.OFV\tTotal NEG.\tQt.Total\tVolume Total\tP.EXE\tINDOPC\tDATA VENC.\tFATCOT\tPTOEXE\tCODISI\tDISMES");  //Escreve o Cabeçalho
+                writer.WriteLine("TIPREG\tDATA\tCODBDI\tCODNEG\tTPMERC\tNOMRES\tESPECI\tPRAZOT\tMODREF\tP.Abe\tP.Max\tP.Min\tP.Med\tP.Ant\tP.Ult\tP.OFC\tP.OFV\tTotal NEG.\tQt.Total\tVolume Total\tP.EXE\tINDOPC\tDATA VENC.\tFATCOT\tPTOEXE\tCODISI\tDISMES");  //Escreve o Cabeçalho
             } 
         }
 
