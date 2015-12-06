@@ -32,12 +32,15 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ConcatenaArquivos = new System.Windows.Forms.Button();
             this.gBoxTipoSaída = new System.Windows.Forms.GroupBox();
-            this.radioButtonXML = new System.Windows.Forms.RadioButton();
             this.radioButtonTXT = new System.Windows.Forms.RadioButton();
+            this.radioButtonXML = new System.Windows.Forms.RadioButton();
             this.listBoxPapeis = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.testarConsultaXML = new System.Windows.Forms.Button();
+            this.dvgXML = new System.Windows.Forms.DataGridView();
+            this.bTesteCalculo = new System.Windows.Forms.Button();
             this.gBoxTipoSaída.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dvgXML)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -65,6 +68,17 @@
             this.gBoxTipoSaída.TabStop = false;
             this.gBoxTipoSaída.Text = "Tipo de arquivo de saída";
             // 
+            // radioButtonTXT
+            // 
+            this.radioButtonTXT.AutoSize = true;
+            this.radioButtonTXT.Location = new System.Drawing.Point(81, 28);
+            this.radioButtonTXT.Name = "radioButtonTXT";
+            this.radioButtonTXT.Size = new System.Drawing.Size(43, 17);
+            this.radioButtonTXT.TabIndex = 1;
+            this.radioButtonTXT.TabStop = true;
+            this.radioButtonTXT.Text = "*.txt";
+            this.radioButtonTXT.UseVisualStyleBackColor = true;
+            // 
             // radioButtonXML
             // 
             this.radioButtonXML.AutoSize = true;
@@ -76,17 +90,6 @@
             this.radioButtonXML.TabStop = true;
             this.radioButtonXML.Text = "*.xml";
             this.radioButtonXML.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonTXT
-            // 
-            this.radioButtonTXT.AutoSize = true;
-            this.radioButtonTXT.Location = new System.Drawing.Point(81, 28);
-            this.radioButtonTXT.Name = "radioButtonTXT";
-            this.radioButtonTXT.Size = new System.Drawing.Size(43, 17);
-            this.radioButtonTXT.TabIndex = 1;
-            this.radioButtonTXT.TabStop = true;
-            this.radioButtonTXT.Text = "*.txt";
-            this.radioButtonTXT.UseVisualStyleBackColor = true;
             // 
             // listBoxPapeis
             // 
@@ -115,11 +118,31 @@
             this.testarConsultaXML.UseVisualStyleBackColor = true;
             this.testarConsultaXML.Click += new System.EventHandler(this.testarConsultaXML_Click);
             // 
+            // dvgXML
+            // 
+            this.dvgXML.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dvgXML.Location = new System.Drawing.Point(172, 28);
+            this.dvgXML.Name = "dvgXML";
+            this.dvgXML.Size = new System.Drawing.Size(369, 234);
+            this.dvgXML.TabIndex = 7;
+            // 
+            // bTesteCalculo
+            // 
+            this.bTesteCalculo.Location = new System.Drawing.Point(330, 339);
+            this.bTesteCalculo.Name = "bTesteCalculo";
+            this.bTesteCalculo.Size = new System.Drawing.Size(107, 42);
+            this.bTesteCalculo.TabIndex = 8;
+            this.bTesteCalculo.Text = "Teste Calculo";
+            this.bTesteCalculo.UseVisualStyleBackColor = true;
+            this.bTesteCalculo.Click += new System.EventHandler(this.bTesteCalculo_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(546, 394);
+            this.Controls.Add(this.bTesteCalculo);
+            this.Controls.Add(this.dvgXML);
             this.Controls.Add(this.testarConsultaXML);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listBoxPapeis);
@@ -131,6 +154,7 @@
             this.Text = "METE (Modelo e Estratégia Trade Erasmo)";
             this.gBoxTipoSaída.ResumeLayout(false);
             this.gBoxTipoSaída.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dvgXML)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,6 +171,8 @@
         private System.Windows.Forms.ListBox listBoxPapeis;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button testarConsultaXML;
+        private System.Windows.Forms.DataGridView dvgXML;
+        private System.Windows.Forms.Button bTesteCalculo;
     }
 }
 

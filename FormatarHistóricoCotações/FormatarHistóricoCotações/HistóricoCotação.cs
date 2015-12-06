@@ -237,15 +237,15 @@ namespace FormatarHistóricoCotações
                                             DateTime DataVencimentoOpções = DateTime.ParseExact(LinhaDoArquivo.Substring(202, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do vencimento de Opções
 
                                             //Tratamento dos valores de cotações lidos
-                                            decimal PreçoAbertura = decimal.Parse(LinhaDoArquivo.Substring(56, 13)) / 100;
-                                            decimal PreçoMáximo = decimal.Parse(LinhaDoArquivo.Substring(69, 13)) / 100;
-                                            decimal PreçoMínimo = decimal.Parse(LinhaDoArquivo.Substring(82, 13)) / 100;
-                                            decimal PreçoMédio = decimal.Parse(LinhaDoArquivo.Substring(95, 13)) / 100;
-                                            decimal PreçoAnterior = decimal.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
-                                            decimal PreçoMelhorCompra = decimal.Parse(LinhaDoArquivo.Substring(121, 13)) / 100;
-                                            decimal PreçoMelhorVenda = decimal.Parse(LinhaDoArquivo.Substring(134, 13)) / 100;
-                                            decimal VolumeTotalNegociado = decimal.Parse(LinhaDoArquivo.Substring(170, 18)) / 100;
-                                            decimal PreçoExercício = decimal.Parse(LinhaDoArquivo.Substring(188, 13)) / 100;
+                                            double PreçoAbertura = double.Parse(LinhaDoArquivo.Substring(56, 13)) / 100;
+                                            double PreçoMáximo = double.Parse(LinhaDoArquivo.Substring(69, 13)) / 100;
+                                            double PreçoMínimo = double.Parse(LinhaDoArquivo.Substring(82, 13)) / 100;
+                                            double PreçoMédio = double.Parse(LinhaDoArquivo.Substring(95, 13)) / 100;
+                                            double PreçoAnterior = double.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
+                                            double PreçoMelhorCompra = double.Parse(LinhaDoArquivo.Substring(121, 13)) / 100;
+                                            double PreçoMelhorVenda = double.Parse(LinhaDoArquivo.Substring(134, 13)) / 100;
+                                            double VolumeTotalNegociado = double.Parse(LinhaDoArquivo.Substring(170, 18)) / 100;
+                                            //double PreçoExercício = double.Parse(LinhaDoArquivo.Substring(188, 13)) / 100;
 
                                             writer.WriteLine(/*LinhaDoArquivo.Substring(0, 2) + "\t" + */DataPregão.ToString("dd/mm/yyyy") + "\t" +/*+ LinhaDoArquivo.Substring(10, 2)
                                         + "\t" + */LinhaDoArquivo.Substring(12, 12) + "\t" + /*LinhaDoArquivo.Substring(24, 3) + "\t" + */LinhaDoArquivo.Substring(27, 12)
@@ -303,17 +303,19 @@ namespace FormatarHistóricoCotações
                                         //Tratamento dos das datas
                                         DateTime DataPregão = DateTime.ParseExact(LinhaDoArquivo.Substring(2, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do pregão
                                         //                  DateTime DataVencimentoOpções = DateTime.ParseExact(LinhaDoArquivo.Substring(202, 8), "yyyymmdd", DateTimeFormatInfo.InvariantInfo);    //Data do vencimento de Opções
-
+                                        //double
                                         //Tratamento dos valores de cotações lidos
-                                        decimal PreçoAbertura = decimal.Parse(LinhaDoArquivo.Substring(56, 13)) / 100;
-                                        decimal PreçoMáximo = decimal.Parse(LinhaDoArquivo.Substring(69, 13)) / 100;
-                                        decimal PreçoMínimo = decimal.Parse(LinhaDoArquivo.Substring(82, 13)) / 100;
-                                        decimal PreçoMédio = decimal.Parse(LinhaDoArquivo.Substring(95, 13)) / 100;
-                                        decimal PreçoAnterior = decimal.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
-                                        decimal PreçoMelhorCompra = decimal.Parse(LinhaDoArquivo.Substring(121, 13)) / 100;
-                                        decimal PreçoMelhorVenda = decimal.Parse(LinhaDoArquivo.Substring(134, 13)) / 100;
-                                        decimal VolumeTotalNegociado = decimal.Parse(LinhaDoArquivo.Substring(170, 18)) / 100;
-                                        decimal PreçoExercício = decimal.Parse(LinhaDoArquivo.Substring(188, 13)) / 100;
+                                        double PreçoAbertura = double.Parse(LinhaDoArquivo.Substring(56, 13)) / 100;
+                                        double PreçoMáximo = double.Parse(LinhaDoArquivo.Substring(69, 13)) / 100;
+                                        double PreçoMínimo = double.Parse(LinhaDoArquivo.Substring(82, 13)) / 100;
+                                        double PreçoMédio = double.Parse(LinhaDoArquivo.Substring(95, 13)) / 100;
+                                        double PreçoAnterior = double.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
+                                        double PreçoMelhorCompra = double.Parse(LinhaDoArquivo.Substring(121, 13)) / 100;
+                                        double PreçoMelhorVenda = double.Parse(LinhaDoArquivo.Substring(134, 13)) / 100;
+                                        double TotalDeNegocios = double.Parse(LinhaDoArquivo.Substring(147, 5));
+                                        double QuantidadePapeis = double.Parse(LinhaDoArquivo.Substring(152, 18));
+                                        double Volume = double.Parse(LinhaDoArquivo.Substring(170, 18)) / 100;
+                                        //double PreçoExercício = double.Parse(LinhaDoArquivo.Substring(188, 13)) / 100;
 
                                         writerXml.WriteStartElement("PAPEL");                                   //Escreve o elemento Raiz
 
@@ -333,9 +335,9 @@ namespace FormatarHistóricoCotações
                                         writerXml.WriteElementString("P.Anterior", PreçoAnterior.ToString());
                                         writerXml.WriteElementString("M_Compra", PreçoMelhorCompra.ToString());
                                         writerXml.WriteElementString("M_Venda", PreçoMelhorVenda.ToString());
-                                        writerXml.WriteElementString("TOTAL_NEG.", LinhaDoArquivo.Substring(147, 5));
-                                        writerXml.WriteElementString("Quant.", LinhaDoArquivo.Substring(152, 18));
-                                        writerXml.WriteElementString("VOLUME", VolumeTotalNegociado.ToString());
+                                        writerXml.WriteElementString("TOTAL_NEG.", TotalDeNegocios.ToString());
+                                        writerXml.WriteElementString("Qnt.Papeis", QuantidadePapeis.ToString());
+                                        writerXml.WriteElementString("VOLUME", Volume.ToString());
                                         //                    writerXml.WriteElementString("Pr_Exec.", PreçoExercício.ToString());
                                         //                    writerXml.WriteElementString("INDOPC", LinhaDoArquivo.Substring(201, 1));
                                         //                    writerXml.WriteElementString("DATA_VENCIMENTO", DataVencimentoOpções.ToString("dd/mm/yyyy"));

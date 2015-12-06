@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace FormatarHistóricoCotações
@@ -16,10 +17,14 @@ namespace FormatarHistóricoCotações
     {
 
         string CaminhoDoDiretorio;
+        //string arquivoXMLSalvo = @"C:\Users\Erasmo\Desktop\Teste de Aplicativo Mercado Financeiro Erasmo\Histórico Anual\Para testes Rapidos\Histórico Concatenado\HistóricoConcatenado.xml";
+        string arquivoXMLSalvo = @"C:\Users\Erasmo\Desktop\Teste de Aplicativo Mercado Financeiro Erasmo\Histórico Anual\Histórico Concatenado\HistóricoConcatenado.xml";
+
         List<string> codigoPapeis = new List<string>();
 
         bool tipoDeSaida;
-        HistóricoCotação histórico; 
+        HistóricoCotação histórico;
+        List<Papeis> hitoricoPapel;
         
         public Form1()
         {
@@ -52,19 +57,15 @@ namespace FormatarHistóricoCotações
             }
 
             histórico.ConcatenaArquivos(CaminhoDoDiretorio,tipoDeSaida);
-
-            //
         }
 
         private void testarConsultaXML_Click(object sender, EventArgs e)
         {
-            //XDocument docTeste = XDocument.Load(@"C:\Users\Erasmo\Desktop\Teste de Aplicativo Mercado Financeiro Erasmo\Histórico Anual\Para testes Rapidos\Histórico Concatenado\HistóricoConcatenado.xml");
-
-            XDocument docTeste = XDocument.Load(@"C:\Users\Erasmo\Desktop\Teste de Aplicativo Mercado Financeiro Erasmo\Histórico Anual\Histórico Concatenado\HistóricoConcatenado.xml");
+            XDocument docTeste = XDocument.Load(arquivoXMLSalvo);
 
             var data = from item in docTeste.Descendants("PAPEL")
-                       where item.Element("DATA").Value == "25/11/2015"     //where item.Element("DATA").Value == "12/02/2009"
-                       select item.Element("CODIGO").Value; 
+                       where (item.Element("DATA").Value == "25/11/2015" && double.Parse(item.Element("TOTAL_NEG.").Value) > 2000)     //Pega todos os papeis da da ultima data que tenham Total de negócios maior que 2000
+                       select item.Element("CODIGO").Value;
             foreach (var p in data)
             {
                 codigoPapeis.Add(p.ToString());
@@ -78,6 +79,45 @@ namespace FormatarHistóricoCotações
 
             label1.Text = "Lista contem: " + codigoPapeis.Count() + " papeis.";
             
+            //Para alimentar o GridView
+            DataSet dataSete = new DataSet();
+            dataSete.ReadXml(arquivoXMLSalvo);
+            dvgXML.DataSource = dataSete.Tables[0].DefaultView;
+
+            //Testando uso da Classe Papeis e testando calculo
+            //Pegando somento o papel EMBR3 e alimentando a classe papeis do docTeste já definido
+
+            //1o passo - fasso o filtro no que quero
+            var queryData = from açao in docTeste.Descendants("PAPEL")
+                            where açao.Element("CODIGO").Value == "EMBR3"
+                            select açao;
+            //2o passo - alimento minha classe Papeis instanciada como papel depos da consulta anterior
+
+            hitoricoPapel = new List<Papeis>();
+            foreach (var item in queryData) //Alimenta o histórico do papel filtrado para calculo.
+            {
+                hitoricoPapel.Add(new Papeis(){ Data=DateTime.Parse(item.Element("DATA").Value),
+                                                CODIGO = item.Element("CODIGO").Value,
+                                                Nome = item.Element("NOME").Value,
+                                                ESPECI = item.Element("ESPECI").Value,
+                                                Moeda = item.Element("MOEDA").Value,
+                                                PreçoAbertura = double.Parse(item.Element("P.Abr").Value),
+                                                PreçoMáximo = double.Parse(item.Element("P.Max").Value),
+                                                PreçoMínimo = double.Parse(item.Element("P.Min").Value),
+                                                PreçoMédio = double.Parse(item.Element("P.Med").Value),
+                                                PreçoAnterior = double.Parse(item.Element("P.Anterior").Value),
+                                                PreçoMelhorCompra = double.Parse(item.Element("M_Compra").Value),
+                                                PreçoMelhorVenda = double.Parse(item.Element("M_Venda").Value),
+                                                TotalDeNegocios = double.Parse(item.Element("TOTAL_NEG.").Value),
+                                                QuantidadePapeis = double.Parse(item.Element("Qnt.Papeis").Value),
+                                                Volume = double.Parse(item.Element("VOLUME").Value)});
+            }
+            
+        }
+
+        private void bTesteCalculo_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
