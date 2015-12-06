@@ -1,0 +1,5 @@
+1-Concatenação dos arquivos 2015 e 2014 resutou em um arquivo *.xml de 639 MB;
+2-Retirada dos papeis de opções e estrangeiros resulou em um arquivo *.xml de 114 MB;
+3-Filtrando por espécie de papelis o arquivo *.xml foi reduzido para 77 MB;
+4-Abrebiando alguns nomes o arquivo foi reduzido para 72,4 MB;
+5-Abrebiando novamente alguns nomes o arquivo foi reduzido para 62,2 MB;
