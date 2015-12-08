@@ -22,14 +22,23 @@ namespace FormatarHistóricoCotações
 
         List<string> codigoPapeis = new List<string>();
 
-        bool tipoDeSaida;
-        HistóricoCotação histórico;
+        //bool tipoDeSaida;
+
+        //Substituição das classes HistóricoCotação por TratarDadosBrutos
+        //HistóricoCotação histórico;
+        ArquivoSaídaTXT históricoSaídaTXT;
+        ArquivoSaídaXML históricoSaídaXML;
+
         List<Papeis> hitoricoPapel;
         
         public Form1()
         {
             InitializeComponent();
-            histórico = new HistóricoCotação();
+            //Substituição das classes HistóricoCotação por TratarDadosBrutos
+            //histórico = new HistóricoCotação();
+            históricoSaídaTXT = new ArquivoSaídaTXT();
+            históricoSaídaXML = new ArquivoSaídaXML();
+
             label1.Text = "Lista contem: " + codigoPapeis.Count() + " papel.";
         }
 
@@ -48,15 +57,21 @@ namespace FormatarHistóricoCotações
                 CaminhoDoDiretorio = infoArquivo.DirectoryName;
             }
 
-            if (radioButtonTXT.Checked)
+            if (radioButtonTXT.Checked) // Arquivo de saída *.txt
             {
-                tipoDeSaida = true;
-            }else if (radioButtonXML.Checked)
-            {
-                tipoDeSaida = false;
+                //Substituição das classes HistóricoCotação por TratarDadosBrutos
+                //tipoDeSaida = true;
+                históricoSaídaTXT.ConcatenaArquivos(CaminhoDoDiretorio);
             }
-
-            histórico.ConcatenaArquivos(CaminhoDoDiretorio,tipoDeSaida);
+            else if (radioButtonXML.Checked) // Arquivo de saída *.xml
+            {
+                //Substituição das classes HistóricoCotação por TratarDadosBrutos
+                //tipoDeSaida = false;
+                históricoSaídaXML.ConcatenaArquivos(CaminhoDoDiretorio);
+            }
+            
+            //Substituição das classes HistóricoCotação por TratarDadosBrutos
+            //histórico.ConcatenaArquivos(CaminhoDoDiretorio,tipoDeSaida);
         }
 
         private void testarConsultaXML_Click(object sender, EventArgs e)
