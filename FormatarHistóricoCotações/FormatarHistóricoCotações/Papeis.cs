@@ -14,18 +14,6 @@ namespace FormatarHistóricoCotações
 {
     class Papeis
     {
-        //public List<DateTime> Data = new List<DateTime>();
-        //public List<double> PreçoAbertura = new List<double>();
-        //public List<double> PreçoMáximo = new List<double>();
-        //public List<double> PreçoMínimo = new List<double>();
-        //public List<double> PreçoMédio = new List<double>();
-        //public List<double> PreçoAnterior = new List<double>();
-        //public List<double> PreçoMelhorCompra = new List<double>();
-        //public List<double> PreçoMelhorVenda = new List<double>();
-        //public List<double> TotalDeNegocios = new List<double>();
-        //public List<double> QuantidadePapeis = new List<double>();
-        //public List<double> Volume = new List<double>();
-
         public DateTime Data = new DateTime();
         public string CODIGO;
         public string Nome;                                
@@ -40,7 +28,6 @@ namespace FormatarHistóricoCotações
         public double PreçoMelhorVenda = new double();
         public double TotalDeNegocios = new double();
         public double QuantidadePapeis = new double();
-        public double Volume = new double();
-       
+        public double Volume = new double();      
     }
 }

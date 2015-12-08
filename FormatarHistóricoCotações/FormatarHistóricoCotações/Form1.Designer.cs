@@ -31,6 +31,7 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ConcatenaArquivos = new System.Windows.Forms.Button();
@@ -41,7 +42,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.testarConsultaXML = new System.Windows.Forms.Button();
             this.dvgXML = new System.Windows.Forms.DataGridView();
-            this.bTesteCalculo = new System.Windows.Forms.Button();
             this.grafico1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.gBoxTipoSaída.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dvgXML)).BeginInit();
@@ -103,6 +103,7 @@
             this.listBoxPapeis.Name = "listBoxPapeis";
             this.listBoxPapeis.Size = new System.Drawing.Size(147, 238);
             this.listBoxPapeis.TabIndex = 4;
+            this.listBoxPapeis.SelectedIndexChanged += new System.EventHandler(this.listBoxPapeis_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -131,16 +132,6 @@
             this.dvgXML.Size = new System.Drawing.Size(369, 235);
             this.dvgXML.TabIndex = 7;
             // 
-            // bTesteCalculo
-            // 
-            this.bTesteCalculo.Location = new System.Drawing.Point(582, 269);
-            this.bTesteCalculo.Name = "bTesteCalculo";
-            this.bTesteCalculo.Size = new System.Drawing.Size(450, 42);
-            this.bTesteCalculo.TabIndex = 8;
-            this.bTesteCalculo.Text = "Teste Calculo";
-            this.bTesteCalculo.UseVisualStyleBackColor = true;
-            this.bTesteCalculo.Click += new System.EventHandler(this.bTesteCalculo_Click);
-            // 
             // grafico1
             // 
             chartArea1.Name = "ChartArea1";
@@ -159,6 +150,11 @@
             this.grafico1.Size = new System.Drawing.Size(450, 235);
             this.grafico1.TabIndex = 9;
             this.grafico1.Text = "chart1";
+            title1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            title1.ForeColor = System.Drawing.Color.Blue;
+            title1.Name = "Title1";
+            title1.Text = "Ação";
+            this.grafico1.Titles.Add(title1);
             // 
             // Form1
             // 
@@ -166,7 +162,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1044, 397);
             this.Controls.Add(this.grafico1);
-            this.Controls.Add(this.bTesteCalculo);
             this.Controls.Add(this.dvgXML);
             this.Controls.Add(this.testarConsultaXML);
             this.Controls.Add(this.label1);
@@ -198,7 +193,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button testarConsultaXML;
         private System.Windows.Forms.DataGridView dvgXML;
-        private System.Windows.Forms.Button bTesteCalculo;
         private System.Windows.Forms.DataVisualization.Charting.Chart grafico1;
     }
 }
