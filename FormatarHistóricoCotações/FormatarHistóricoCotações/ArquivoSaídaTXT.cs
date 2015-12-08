@@ -18,7 +18,7 @@ namespace FormatarHistóricoCotações
         {
             using (StreamWriter writer = new StreamWriter(salvarComo, false)) //Escreve o Cabeçalho do arquivo de saída formatado em *.txt
             {
-                writer.WriteLine("DATA\tCODNEG\tNOME\tESPECI\tMOEDAF\tP.Abe\tP.Max\tP.Min\tP.Med\tP.Ant\tP.Ult\tP.OFC\tP.OFV\tTotal NEG.\tQt.Total\tVolume");
+                writer.WriteLine("DATA\tCODNEG\tNOME\tESPECI\tMOEDAF\tP.Abe\tP.Max\tP.Min\tP.Med\tP.Fech\tP.Ult\tP.OFC\tP.OFV\tTotal NEG.\tQt.Total\tVolume");
             }
         }
 
@@ -40,7 +40,7 @@ namespace FormatarHistóricoCotações
                    double PreçoMáximo = double.Parse(LinhaDoArquivo.Substring(69, 13)) / 100;
                    double PreçoMínimo = double.Parse(LinhaDoArquivo.Substring(82, 13)) / 100;
                    double PreçoMédio = double.Parse(LinhaDoArquivo.Substring(95, 13)) / 100;
-                   double PreçoAnterior = double.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
+                   double PreçoFechamento = double.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
                    double PreçoMelhorCompra = double.Parse(LinhaDoArquivo.Substring(121, 13)) / 100;
                    double PreçoMelhorVenda = double.Parse(LinhaDoArquivo.Substring(134, 13)) / 100;
                    double VolumeTotalNegociado = double.Parse(LinhaDoArquivo.Substring(170, 18)) / 100;
@@ -54,7 +54,7 @@ namespace FormatarHistóricoCotações
                                     + PreçoMáximo.ToString() + "\t" 
                                     + PreçoMínimo.ToString() + "\t" 
                                     + PreçoMédio.ToString() + "\t" 
-                                    + PreçoAnterior.ToString() + "\t" 
+                                    + PreçoFechamento.ToString() + "\t" 
                                     + PreçoMelhorCompra.ToString() + "\t" 
                                     + PreçoMelhorVenda.ToString() + "\t" 
                                     + LinhaDoArquivo.Substring(147, 5) + "\t" 

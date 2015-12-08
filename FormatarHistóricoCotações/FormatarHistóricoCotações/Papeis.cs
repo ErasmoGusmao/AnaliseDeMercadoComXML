@@ -35,7 +35,7 @@ namespace FormatarHistóricoCotações
         public double PreçoMáximo = new double();
         public double PreçoMínimo = new double();
         public double PreçoMédio = new double();
-        public double PreçoAnterior = new double();
+        public double PreçoFechamento = new double();
         public double PreçoMelhorCompra = new double();
         public double PreçoMelhorVenda = new double();
         public double TotalDeNegocios = new double();

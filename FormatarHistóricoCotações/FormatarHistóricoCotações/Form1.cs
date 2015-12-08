@@ -59,19 +59,13 @@ namespace FormatarHistóricoCotações
 
             if (radioButtonTXT.Checked) // Arquivo de saída *.txt
             {
-                //Substituição das classes HistóricoCotação por TratarDadosBrutos
-                //tipoDeSaida = true;
                 históricoSaídaTXT.ConcatenaArquivos(CaminhoDoDiretorio);
             }
             else if (radioButtonXML.Checked) // Arquivo de saída *.xml
             {
-                //Substituição das classes HistóricoCotação por TratarDadosBrutos
-                //tipoDeSaida = false;
                 históricoSaídaXML.ConcatenaArquivos(CaminhoDoDiretorio);
             }
             
-            //Substituição das classes HistóricoCotação por TratarDadosBrutos
-            //histórico.ConcatenaArquivos(CaminhoDoDiretorio,tipoDeSaida);
         }
 
         private void testarConsultaXML_Click(object sender, EventArgs e)
@@ -102,36 +96,86 @@ namespace FormatarHistóricoCotações
             //Testando uso da Classe Papeis e testando calculo
             //Pegando somento o papel EMBR3 e alimentando a classe papeis do docTeste já definido
 
-            //1o passo - fasso o filtro no que quero
-            var queryData = from açao in docTeste.Descendants("PAPEL")
-                            where açao.Element("CODIGO").Value == "EMBR3"
-                            select açao;
-            //2o passo - alimento minha classe Papeis instanciada como papel depos da consulta anterior
-
-            hitoricoPapel = new List<Papeis>();
-            foreach (var item in queryData) //Alimenta o histórico do papel filtrado para calculo.
-            {
-                hitoricoPapel.Add(new Papeis(){ Data=DateTime.Parse(item.Element("DATA").Value),
-                                                CODIGO = item.Element("CODIGO").Value,
-                                                Nome = item.Element("NOME").Value,
-                                                ESPECI = item.Element("ESPECI").Value,
-                                                Moeda = item.Element("MOEDA").Value,
-                                                PreçoAbertura = double.Parse(item.Element("P.Abr").Value),
-                                                PreçoMáximo = double.Parse(item.Element("P.Max").Value),
-                                                PreçoMínimo = double.Parse(item.Element("P.Min").Value),
-                                                PreçoMédio = double.Parse(item.Element("P.Med").Value),
-                                                PreçoAnterior = double.Parse(item.Element("P.Anterior").Value),
-                                                PreçoMelhorCompra = double.Parse(item.Element("M_Compra").Value),
-                                                PreçoMelhorVenda = double.Parse(item.Element("M_Venda").Value),
-                                                TotalDeNegocios = double.Parse(item.Element("TOTAL_NEG.").Value),
-                                                QuantidadePapeis = double.Parse(item.Element("Qnt.Papeis").Value),
-                                                Volume = double.Parse(item.Element("VOLUME").Value)});
-            }
             
         }
 
         private void bTesteCalculo_Click(object sender, EventArgs e)
         {
+            #region "comentário"
+            //XDocument docTeste = XDocument.Load(arquivoXMLSalvo);
+            ////1o passo - fasso o filtro no que quero
+            //var queryData = from açao in docTeste.Descendants("PAPEL")
+            //                where açao.Element("CODIGO").Value == "EMBR3"
+            //                select açao;
+            ////2o passo - alimento minha classe Papeis instanciada como papel depos da consulta anterior
+
+            //hitoricoPapel = new List<Papeis>();
+            //foreach (var item in queryData) //Alimenta o histórico do papel filtrado para calculo.
+            //{
+            //    hitoricoPapel.Add(new Papeis()
+            //    {
+            //        Data = DateTime.Parse(item.Element("DATA").Value),
+            //        CODIGO = item.Element("CODIGO").Value,
+            //        Nome = item.Element("NOME").Value,
+            //        ESPECI = item.Element("ESPECI").Value,
+            //        Moeda = item.Element("MOEDA").Value,
+            //        PreçoAbertura = double.Parse(item.Element("P.Abr").Value),
+            //        PreçoMáximo = double.Parse(item.Element("P.Max").Value),
+            //        PreçoMínimo = double.Parse(item.Element("P.Min").Value),
+            //        PreçoMédio = double.Parse(item.Element("P.Med").Value),
+            //        PreçoFechamento = double.Parse(item.Element("P.Anterior").Value),
+            //        PreçoMelhorCompra = double.Parse(item.Element("M_Compra").Value),
+            //        PreçoMelhorVenda = double.Parse(item.Element("M_Venda").Value),
+            //        TotalDeNegocios = double.Parse(item.Element("TOTAL_NEG.").Value),
+            //        QuantidadePapeis = double.Parse(item.Element("Qnt.Papeis").Value),
+            //        Volume = double.Parse(item.Element("VOLUME").Value)
+            //    });
+            //}
+            #endregion
+
+            //Fazer gráfico com dados do arquivo xml
+            XDocument docTeste = XDocument.Load(arquivoXMLSalvo);
+            ////1o passo - fasso o filtro no que quero
+            var queryData = from açao in docTeste.Descendants("PAPEL")
+                            where açao.Element("CODIGO").Value == "EMBR3  " //Coolocar 7 caracteres incluindo espaço em brando para pesquisa
+                            select açao;
+
+            ////2o passo - alimento minha classe Papeis instanciada como papel depos da consulta anterior
+
+            hitoricoPapel = new List<Papeis>();
+            foreach (var item in queryData) //Alimenta o histórico do papel filtrado para calculo.
+            {
+                hitoricoPapel.Add(new Papeis()
+                {
+                    Data = DateTime.Parse(item.Element("DATA").Value),
+                    CODIGO = item.Element("CODIGO").Value,
+                    Nome = item.Element("NOME").Value,
+                    ESPECI = item.Element("ESPECI").Value,
+                    Moeda = item.Element("MOEDA").Value,
+                    PreçoAbertura = double.Parse(item.Element("P.Abr").Value),
+                    PreçoMáximo = double.Parse(item.Element("P.Max").Value),
+                    PreçoMínimo = double.Parse(item.Element("P.Min").Value),
+                    PreçoMédio = double.Parse(item.Element("P.Med").Value),
+                    PreçoFechamento = double.Parse(item.Element("P.Fech").Value),
+                    PreçoMelhorCompra = double.Parse(item.Element("M_Compra").Value),
+                    PreçoMelhorVenda = double.Parse(item.Element("M_Venda").Value),
+                    TotalDeNegocios = double.Parse(item.Element("TOTAL_NEG.").Value),
+                    QuantidadePapeis = double.Parse(item.Element("Qnt.Papeis").Value),
+                    Volume = double.Parse(item.Element("VOLUME").Value)
+                });
+            }
+
+
+            this.grafico1.Series[0].IsVisibleInLegend = false; //desabilito legenda
+            this.grafico1.Series[0].LegendText = "Gráfico do fechamento do papel " + hitoricoPapel[0].CODIGO; //Modifico a legenda
+
+
+            //grafico1.Series[0].XValueType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType;
+            
+            for (int i = 0; i < hitoricoPapel.Count(); i++) //Percorre todo o histórico do papel para fazer gráfico
+            {
+                this.grafico1.Series[0].Points.AddXY(hitoricoPapel[i].Data,hitoricoPapel[i].PreçoFechamento);
+            }  
 
         }
     }

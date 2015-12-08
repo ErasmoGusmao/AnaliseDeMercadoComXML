@@ -37,7 +37,7 @@ namespace FormatarHistóricoCotações
                         double PreçoMáximo = double.Parse(LinhaDoArquivo.Substring(69, 13)) / 100;
                         double PreçoMínimo = double.Parse(LinhaDoArquivo.Substring(82, 13)) / 100;
                         double PreçoMédio = double.Parse(LinhaDoArquivo.Substring(95, 13)) / 100;
-                        double PreçoAnterior = double.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
+                        double PreçoFechamento = double.Parse(LinhaDoArquivo.Substring(108, 13)) / 100;
                         double PreçoMelhorCompra = double.Parse(LinhaDoArquivo.Substring(121, 13)) / 100;
                         double PreçoMelhorVenda = double.Parse(LinhaDoArquivo.Substring(134, 13)) / 100;
                         double TotalDeNegocios = double.Parse(LinhaDoArquivo.Substring(147, 5));
@@ -49,7 +49,7 @@ namespace FormatarHistóricoCotações
 
                         //Escreve os sub-elementos
                         writerXml.WriteElementString("DATA", DataPregão.ToString("dd/mm/yyyy"));
-                        writerXml.WriteElementString("CODIGO", LinhaDoArquivo.Substring(12, 12));
+                        writerXml.WriteElementString("CODIGO", LinhaDoArquivo.Substring(12, 7)); //writerXml.WriteElementString("CODIGO", LinhaDoArquivo.Substring(12, 12));
                         writerXml.WriteElementString("NOME", LinhaDoArquivo.Substring(27, 12));
                         writerXml.WriteElementString("ESPECI", LinhaDoArquivo.Substring(39, 10));
                         writerXml.WriteElementString("MOEDA", LinhaDoArquivo.Substring(52, 4));
@@ -57,7 +57,7 @@ namespace FormatarHistóricoCotações
                         writerXml.WriteElementString("P.Max", PreçoMáximo.ToString());
                         writerXml.WriteElementString("P.Min", PreçoMínimo.ToString());
                         writerXml.WriteElementString("P.Med", PreçoMédio.ToString());
-                        writerXml.WriteElementString("P.Anterior", PreçoAnterior.ToString());
+                        writerXml.WriteElementString("P.Fech", PreçoFechamento.ToString());
                         writerXml.WriteElementString("M_Compra", PreçoMelhorCompra.ToString());
                         writerXml.WriteElementString("M_Venda", PreçoMelhorVenda.ToString());
                         writerXml.WriteElementString("TOTAL_NEG.", TotalDeNegocios.ToString());
