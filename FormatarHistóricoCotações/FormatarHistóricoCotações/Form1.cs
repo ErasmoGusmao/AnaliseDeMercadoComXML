@@ -27,6 +27,16 @@ namespace FormatarHistóricoCotações
         ArquivoSaídaXML históricoSaídaXML;
 
         List<Papeis> hitoricoPapel;
+        List<double> fechamentoPapel;
+
+        //Testa a classe média móvel exponencial
+        MédiaMóvelExponencial MME_rapida = new MédiaMóvelExponencial();
+        int períodoRápido = 10;
+        MédiaMóvelExponencial MME_intermediária = new MédiaMóvelExponencial();
+        int períodoIntermediário = 15;
+        MédiaMóvelExponencial MME_lenta = new MédiaMóvelExponencial();
+        int períodoLento = 20;
+
         
         public Form1()
         {
@@ -36,6 +46,24 @@ namespace FormatarHistóricoCotações
             históricoSaídaXML = new ArquivoSaídaXML();
 
             label1.Text = "Lista contem: " + codigoPapeis.Count() + " papel.";
+
+            grafico1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            grafico1.Series[0].Color = Color.Brown;
+            grafico1.Series[0].Name = "Frechamento";
+
+            //Novas séries
+            grafico1.Series.Add("MME_Rápida");
+            grafico1.Series["MME_Rápida"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            grafico1.Series["MME_Rápida"].Color = Color.Red;
+
+            grafico1.Series.Add("MME_Intermediária");
+            grafico1.Series["MME_Intermediária"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            grafico1.Series["MME_Intermediária"].Color = Color.Black;
+
+            //Novas séries
+            grafico1.Series.Add("MME_Lenta");
+            grafico1.Series["MME_Lenta"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            grafico1.Series["MME_Lenta"].Color = Color.Blue;
         }
 
         private void ConcatenaArquivos_Click(object sender, EventArgs e)
@@ -99,8 +127,19 @@ namespace FormatarHistóricoCotações
             hitoricoPapel = new List<Papeis>();
             hitoricoPapel.Clear();
 
+            //Lista com o fechamento dos papeis
+            fechamentoPapel = new List<double>();
+            fechamentoPapel.Clear(); //Limpo lista
+
             //Limpa gráfico
-            this.grafico1.Series[0].Points.Clear();
+            this.grafico1.Series[0].Points.Clear(); // Histórico de fechamento
+            
+            
+            //Limpar novas séries
+            this.grafico1.Series["MME_Rápida"].Points.Clear();
+            this.grafico1.Series["MME_Intermediária"].Points.Clear();
+            this.grafico1.Series["MME_Lenta"].Points.Clear();
+
 
             //Fazer gráfico com dados do arquivo xml
             XDocument docTeste = XDocument.Load(arquivoXMLSalvo);
@@ -131,18 +170,24 @@ namespace FormatarHistóricoCotações
                     QuantidadePapeis = double.Parse(item.Element("Qnt.Papeis").Value),
                     Volume = double.Parse(item.Element("VOLUME").Value)
                 });
+
+                fechamentoPapel.Add(double.Parse(item.Element("P.Fech").Value)); //Carrego a lista com o histórico do fechamento do papel
             }
 
             this.grafico1.Titles[0].Text = hitoricoPapel[0].CODIGO + "- " + hitoricoPapel[0].Nome;
             this.grafico1.Series[0].IsVisibleInLegend = false; //desabilita legenda
             //this.grafico1.Series[0].LegendText = "Gráfico do fechamento do papel " + hitoricoPapel[0].CODIGO; //Modifico a legenda
 
-
-            //grafico1.Series[0].XValueType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType;
-            
+                      
             for (int i = 0; i < hitoricoPapel.Count(); i++) //Percorre todo o histórico do papel para fazer gráfico
             {
                 this.grafico1.Series[0].Points.AddXY(hitoricoPapel[i].Data,hitoricoPapel[i].PreçoFechamento);
+
+
+            //Testar a classe Média móvel expnencial
+                this.grafico1.Series["MME_Rápida"].Points.AddXY(hitoricoPapel[i].Data, MME_rapida.GerarMME(fechamentoPapel, períodoRápido)[i]);
+                this.grafico1.Series["MME_Intermediária"].Points.AddXY(hitoricoPapel[i].Data, MME_rapida.GerarMME(fechamentoPapel, períodoIntermediário)[i]);
+                this.grafico1.Series["MME_Lenta"].Points.AddXY(hitoricoPapel[i].Data, MME_rapida.GerarMME(fechamentoPapel, períodoLento)[i]);
             }
         }
     }
