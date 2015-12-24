@@ -32,6 +32,9 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ConcatenaArquivos = new System.Windows.Forms.Button();
@@ -43,9 +46,11 @@
             this.testarConsultaXML = new System.Windows.Forms.Button();
             this.dvgXML = new System.Windows.Forms.DataGridView();
             this.grafico1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.gráfico2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.gBoxTipoSaída.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dvgXML)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grafico1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gráfico2)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -116,7 +121,7 @@
             // 
             // testarConsultaXML
             // 
-            this.testarConsultaXML.Location = new System.Drawing.Point(192, 337);
+            this.testarConsultaXML.Location = new System.Drawing.Point(192, 338);
             this.testarConsultaXML.Name = "testarConsultaXML";
             this.testarConsultaXML.Size = new System.Drawing.Size(122, 44);
             this.testarConsultaXML.TabIndex = 6;
@@ -127,9 +132,9 @@
             // dvgXML
             // 
             this.dvgXML.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dvgXML.Location = new System.Drawing.Point(172, 28);
+            this.dvgXML.Location = new System.Drawing.Point(192, 25);
             this.dvgXML.Name = "dvgXML";
-            this.dvgXML.Size = new System.Drawing.Size(369, 235);
+            this.dvgXML.Size = new System.Drawing.Size(159, 159);
             this.dvgXML.TabIndex = 7;
             // 
             // grafico1
@@ -137,17 +142,22 @@
             chartArea1.Name = "ChartArea1";
             this.grafico1.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
+            legend1.Position.Auto = false;
+            legend1.Position.Height = 10.25641F;
+            legend1.Position.Width = 18.44864F;
+            legend1.Position.X = 10F;
+            legend1.Position.Y = 5F;
             this.grafico1.Legends.Add(legend1);
-            this.grafico1.Location = new System.Drawing.Point(582, 28);
+            this.grafico1.Location = new System.Drawing.Point(373, 25);
             this.grafico1.Name = "grafico1";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series1.Legend = "Legend1";
-            series1.Name = "Series1";
+            series1.Name = "Frechamento";
             series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series1.YValuesPerPoint = 4;
             this.grafico1.Series.Add(series1);
-            this.grafico1.Size = new System.Drawing.Size(450, 235);
+            this.grafico1.Size = new System.Drawing.Size(478, 235);
             this.grafico1.TabIndex = 9;
             this.grafico1.Text = "chart1";
             title1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
@@ -156,11 +166,40 @@
             title1.Text = "Ação";
             this.grafico1.Titles.Add(title1);
             // 
+            // gráfico2
+            // 
+            chartArea2.Name = "ChartArea1";
+            chartArea2.Position.Auto = false;
+            chartArea2.Position.Height = 85F;
+            chartArea2.Position.Width = 94F;
+            chartArea2.Position.X = 3F;
+            chartArea2.Position.Y = 15F;
+            this.gráfico2.ChartAreas.Add(chartArea2);
+            legend2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
+            legend2.IsTextAutoFit = false;
+            legend2.Name = "Legend1";
+            legend2.Position.Auto = false;
+            legend2.Position.Height = 23.76238F;
+            legend2.Position.Width = 17.40042F;
+            legend2.Position.X = 10F;
+            this.gráfico2.Legends.Add(legend2);
+            this.gráfico2.Location = new System.Drawing.Point(373, 266);
+            this.gráfico2.Name = "gráfico2";
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "MACD";
+            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            this.gráfico2.Series.Add(series2);
+            this.gráfico2.Size = new System.Drawing.Size(478, 239);
+            this.gráfico2.TabIndex = 10;
+            this.gráfico2.Text = "chart1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1044, 397);
+            this.ClientSize = new System.Drawing.Size(1001, 530);
+            this.Controls.Add(this.gráfico2);
             this.Controls.Add(this.grafico1);
             this.Controls.Add(this.dvgXML);
             this.Controls.Add(this.testarConsultaXML);
@@ -169,13 +208,13 @@
             this.Controls.Add(this.gBoxTipoSaída);
             this.Controls.Add(this.ConcatenaArquivos);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "METE (Modelo e Estratégia Trade Erasmo)";
             this.gBoxTipoSaída.ResumeLayout(false);
             this.gBoxTipoSaída.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dvgXML)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.grafico1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gráfico2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -194,6 +233,7 @@
         private System.Windows.Forms.Button testarConsultaXML;
         private System.Windows.Forms.DataGridView dvgXML;
         private System.Windows.Forms.DataVisualization.Charting.Chart grafico1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart gráfico2;
     }
 }
 

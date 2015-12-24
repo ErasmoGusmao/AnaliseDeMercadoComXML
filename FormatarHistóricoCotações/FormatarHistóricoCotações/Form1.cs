@@ -18,52 +18,58 @@ namespace FormatarHistóricoCotações
 
         string CaminhoDoDiretorio;
         //string arquivoXMLSalvo = @"C:\Users\Erasmo\Desktop\Teste de Aplicativo Mercado Financeiro Erasmo\Histórico Anual\Para testes Rapidos\Histórico Concatenado\HistóricoConcatenado.xml";
+        //string arquivoXMLSalvo = @"C:\Users\Erasmo\Desktop\Teste de Aplicativo Mercado Financeiro Erasmo\Histórico Anual\Para testes Completos\Histórico Concatenado\HistóricoConcatenado.xml";
         string arquivoXMLSalvo = @"C:\Users\Erasmo\Desktop\Teste de Aplicativo Mercado Financeiro Erasmo\Histórico Anual\Histórico Concatenado\HistóricoConcatenado.xml";
 
         List<string> codigoPapeis = new List<string>();
         string codigoPapelisteBox;
 
-        ArquivoSaídaTXT históricoSaídaTXT;
-        ArquivoSaídaXML históricoSaídaXML;
+        ArquivoSaídaTXT históricoSaídaTXT = new ArquivoSaídaTXT();
+        ArquivoSaídaXML históricoSaídaXML = new ArquivoSaídaXML();
 
-        List<Papeis> hitoricoPapel;
-        List<double> fechamentoPapel;
-
-        //Testa a classe média móvel exponencial
-        MédiaMóvelExponencial MME_rapida = new MédiaMóvelExponencial();
-        int períodoRápido = 10;
-        MédiaMóvelExponencial MME_intermediária = new MédiaMóvelExponencial();
-        int períodoIntermediário = 15;
-        MédiaMóvelExponencial MME_lenta = new MédiaMóvelExponencial();
-        int períodoLento = 20;
+        List<Papeis> históricoPapel = new List<Papeis>();
+        List<double> fechamentoPapel = new List<double>();
 
         
         public Form1()
         {
             InitializeComponent();
-
-            históricoSaídaTXT = new ArquivoSaídaTXT();
-            históricoSaídaXML = new ArquivoSaídaXML();
-
             label1.Text = "Lista contem: " + codigoPapeis.Count() + " papel.";
 
-            grafico1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            grafico1.Series[0].Color = Color.Brown;
-            grafico1.Series[0].Name = "Frechamento";
+            grafico1.Series["Frechamento"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            grafico1.Series["Frechamento"].Color = Color.Brown;
 
-            //Novas séries
+            #region "Inicialização do gráfico 1"
+            //Novas séries gráfico 1
             grafico1.Series.Add("MME_Rápida");
             grafico1.Series["MME_Rápida"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             grafico1.Series["MME_Rápida"].Color = Color.Red;
+            this.grafico1.Series["MME_Rápida"].IsVisibleInLegend = false; //desabilita legenda
 
             grafico1.Series.Add("MME_Intermediária");
             grafico1.Series["MME_Intermediária"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             grafico1.Series["MME_Intermediária"].Color = Color.Black;
+            this.grafico1.Series["MME_Intermediária"].IsVisibleInLegend = false; //desabilita legenda
 
-            //Novas séries
             grafico1.Series.Add("MME_Lenta");
             grafico1.Series["MME_Lenta"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             grafico1.Series["MME_Lenta"].Color = Color.Blue;
+            this.grafico1.Series["MME_Lenta"].IsVisibleInLegend = false; //desabilita legenda
+            #endregion
+
+            #region "Inicialização do gráfico2"
+            //Novas séries gráfico 2
+            gráfico2.Series.Add("LineMACD");
+            gráfico2.Series["LineMACD"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            gráfico2.Series["LineMACD"].Color = Color.Black;
+            this.gráfico2.Series["LineMACD"].IsVisibleInLegend = false; //desabilita legenda
+
+            gráfico2.Series.Add("sinal");
+            gráfico2.Series["sinal"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            gráfico2.Series["sinal"].Color = Color.Red;
+            this.gráfico2.Series["sinal"].IsVisibleInLegend = false; //desabilita legenda
+            #endregion
+
         }
 
         private void ConcatenaArquivos_Click(object sender, EventArgs e)
@@ -118,29 +124,20 @@ namespace FormatarHistóricoCotações
             dvgXML.DataSource = dataSete.Tables[0].DefaultView;
         }
 
-
-
         private void listBoxPapeis_SelectedIndexChanged(object sender, EventArgs e)
         {
             codigoPapelisteBox = listBoxPapeis.Items[listBoxPapeis.SelectedIndex].ToString();
 
-            hitoricoPapel = new List<Papeis>();
-            hitoricoPapel.Clear();
-
-            //Lista com o fechamento dos papeis
-            fechamentoPapel = new List<double>();
-            fechamentoPapel.Clear(); //Limpo lista
-
-            //Limpa gráfico
-            this.grafico1.Series[0].Points.Clear(); // Histórico de fechamento
+            históricoPapel.Clear();
+            fechamentoPapel.Clear();
+            carregarDadosPapeisXML();
+            gráficoHistóricoPapel();
+            gráficoMACD();
             
-            
-            //Limpar novas séries
-            this.grafico1.Series["MME_Rápida"].Points.Clear();
-            this.grafico1.Series["MME_Intermediária"].Points.Clear();
-            this.grafico1.Series["MME_Lenta"].Points.Clear();
+        }
 
-
+        private void carregarDadosPapeisXML()
+        {
             //Fazer gráfico com dados do arquivo xml
             XDocument docTeste = XDocument.Load(arquivoXMLSalvo);
             ////1o passo - fasso o filtro no que quero
@@ -152,7 +149,7 @@ namespace FormatarHistóricoCotações
 
             foreach (var item in queryData) //Alimenta o histórico do papel filtrado para calculo.
             {
-                hitoricoPapel.Add(new Papeis()
+                históricoPapel.Add(new Papeis()
                 {
                     Data = DateTime.Parse(item.Element("DATA").Value),
                     CODIGO = item.Element("CODIGO").Value,
@@ -173,21 +170,68 @@ namespace FormatarHistóricoCotações
 
                 fechamentoPapel.Add(double.Parse(item.Element("P.Fech").Value)); //Carrego a lista com o histórico do fechamento do papel
             }
+        }
 
-            this.grafico1.Titles[0].Text = hitoricoPapel[0].CODIGO + "- " + hitoricoPapel[0].Nome;
-            this.grafico1.Series[0].IsVisibleInLegend = false; //desabilita legenda
+        private void gráficoHistóricoPapel() 
+        {
+            //Limpa gráfico 1
+            this.grafico1.Series[0].Points.Clear(); // Histórico de fechamento
+            this.grafico1.Series["MME_Rápida"].Points.Clear();
+            this.grafico1.Series["MME_Intermediária"].Points.Clear();
+            this.grafico1.Series["MME_Lenta"].Points.Clear();
+
+            this.grafico1.Titles[0].Text = históricoPapel[0].CODIGO + "- " + históricoPapel[0].Nome;
+            this.grafico1.Series["Frechamento"].IsVisibleInLegend = false; //desabilita legenda
             //this.grafico1.Series[0].LegendText = "Gráfico do fechamento do papel " + hitoricoPapel[0].CODIGO; //Modifico a legenda
 
-                      
-            for (int i = 0; i < hitoricoPapel.Count(); i++) //Percorre todo o histórico do papel para fazer gráfico
+            for (int i = 0; i < históricoPapel.Count(); i++) //Percorre todo o histórico do papel para fazer gráfico
             {
-                this.grafico1.Series[0].Points.AddXY(hitoricoPapel[i].Data,hitoricoPapel[i].PreçoFechamento);
+                this.grafico1.Series[0].Points.AddXY(históricoPapel[i].Data, históricoPapel[i].PreçoFechamento);
+            }
 
+            #region "Teste da classe Média Móvel Exponencial"
 
-            //Testar a classe Média móvel expnencial
-                this.grafico1.Series["MME_Rápida"].Points.AddXY(hitoricoPapel[i].Data, MME_rapida.GerarMME(fechamentoPapel, períodoRápido)[i]);
-                this.grafico1.Series["MME_Intermediária"].Points.AddXY(hitoricoPapel[i].Data, MME_rapida.GerarMME(fechamentoPapel, períodoIntermediário)[i]);
-                this.grafico1.Series["MME_Lenta"].Points.AddXY(hitoricoPapel[i].Data, MME_rapida.GerarMME(fechamentoPapel, períodoLento)[i]);
+            //Testa a classe média móvel exponencial
+            MédiaMóvelExponencial MME = new MédiaMóvelExponencial();
+            int períodoRápido = 10;
+            int períodoIntermediário = 15;
+            int períodoLento = 20;
+
+            for (int i = períodoRápido - 1; i < históricoPapel.Count(); i++)
+            {
+                this.grafico1.Series["MME_Rápida"].Points.AddXY(históricoPapel[i].Data, MME.GerarMME(fechamentoPapel, períodoRápido)[i]);
+            }
+
+            for (int i = períodoIntermediário - 1; i < históricoPapel.Count(); i++)
+            {
+                this.grafico1.Series["MME_Intermediária"].Points.AddXY(históricoPapel[i].Data, MME.GerarMME(fechamentoPapel, períodoIntermediário)[i]);
+            }
+
+            for (int i = períodoLento - 1; i < históricoPapel.Count(); i++)
+            {
+                this.grafico1.Series["MME_Lenta"].Points.AddXY(históricoPapel[i].Data, MME.GerarMME(fechamentoPapel, períodoLento)[i]);
+            }
+            #endregion
+        }
+
+        private void gráficoMACD() 
+        {
+            //Limpa gráfico 2
+            this.gráfico2.Series["MACD"].Points.Clear();
+            this.gráfico2.Series["LineMACD"].Points.Clear();
+            this.gráfico2.Series["sinal"].Points.Clear();
+
+            int períodoCurtoMACD = 12;
+            int períodoLongoMACD = 26;
+            int períodoSinalMACD = 9;
+
+            IndicadorMACD MACD = new IndicadorMACD(fechamentoPapel, períodoCurtoMACD, períodoLongoMACD, períodoSinalMACD);
+
+            for (int i = 0; i < históricoPapel.Count(); i++)
+            {
+                this.gráfico2.Series["MACD"].Points.AddXY(históricoPapel[i].Data, MACD.HistográmaMACD[i]);
+                this.gráfico2.Series["LineMACD"].Points.AddXY(históricoPapel[i].Data, MACD.HistóricoLinhaMACD[i]);
+                this.gráfico2.Series["sinal"].Points.AddXY(históricoPapel[i].Data, MACD.HistórcioSinalMACD[i]);
             }
         }
     }

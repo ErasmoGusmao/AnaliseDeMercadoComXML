@@ -25,8 +25,9 @@ namespace FormatarHistóricoCotações
 
             for (int i = 0; i < fechamento.Count; i++) //Varre todo o histórico
             {
-                ListaDaMME.Add((ListaDaMME[i] + (((double)2 / (double)(período + 1))) * (fechamento[i] - ListaDaMME[i])));
+                ListaDaMME.Add((ListaDaMME[i] + (((double)2 / (double)(período + 1))) * (fechamento[i] - ListaDaMME[i])));//Formula da MME
             }
+
             return ListaDaMME;
         }
     }
