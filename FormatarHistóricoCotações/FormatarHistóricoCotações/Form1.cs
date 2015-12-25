@@ -235,8 +235,8 @@ namespace FormatarHistóricoCotações
             for (int i = 0; i < históricoPapel.Count(); i++)
             {
                 this.gráfico2.Series["MACD"].Points.AddXY(históricoPapel[i].Data, MACD.HistográmaMACD[i]);
-                this.gráfico2.Series["LineMACD"].Points.AddXY(históricoPapel[i].Data, MACD.HistóricoLinhaMACD[i]);
-                this.gráfico2.Series["sinal"].Points.AddXY(históricoPapel[i].Data, MACD.HistórcioSinalMACD[i]);
+                this.gráfico2.Series["LineMACD"].Points.AddXY(históricoPapel[i].Data, MACD.ListaDaMACD[i]);
+                this.gráfico2.Series["sinal"].Points.AddXY(históricoPapel[i].Data, MACD.ListaDoSinalMACD[i]);
             }
         }
     }

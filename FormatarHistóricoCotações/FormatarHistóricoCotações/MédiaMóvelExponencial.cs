@@ -26,9 +26,20 @@ namespace FormatarHistóricoCotações
             ListaDaMME = new List<double>();
             ListaDaMME.Clear(); //Limpo a lista antes de começar
 
-            ListaDaMME.Add(0); // O primeiro elemento da lista é zero -> para usar na formula de recorrência
+            for (int i = 0; i < período-1; i++)
+            {
+                ListaDaMME.Add(0); // Os primeiros elementos da lista serão zero
+            }
 
-            for (int i = 0; i < fechamento.Count; i++) //Varre todo o histórico
+            double soma = 0;
+            for (int i = 0; i < período; i++)
+            {
+                soma += fechamento[i];
+            }
+
+            ListaDaMME.Add(soma / ((double)período)); //O elemento de número [perído-1] é a média dos anteriroes
+
+            for (int i = período-1; i < fechamento.Count; i++) //Varre todos os elementos restantes do histórico que será tirado a MME
             {
                 ListaDaMME.Add((ListaDaMME[i] + (((double)2 / (double)(período + 1))) * (fechamento[i] - ListaDaMME[i])));//Formula da MME
             }

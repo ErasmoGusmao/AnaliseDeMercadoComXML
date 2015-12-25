@@ -14,8 +14,8 @@ namespace FormatarHistóricoCotações
 {
     class IndicadorMACD
     {
-        public List<double> HistóricoLinhaMACD { get; private set;}
-        public List<double> HistórcioSinalMACD { get; private set;}
+        public List<double> ListaDaMACD { get; private set;}
+        public List<double> ListaDoSinalMACD { get; private set;}
         public List<double> HistográmaMACD {get; private set;}
 
 
@@ -28,25 +28,25 @@ namespace FormatarHistóricoCotações
         private void GerarHistóricoMACD(List<double> preçoFechamento,int períodoCurto, int períodoLongo, int períodoSinal) // Gera a linha do indicador MACD
         {
 
-            HistóricoLinhaMACD = new List<double>();
-            HistórcioSinalMACD = new List<double>();
+            ListaDaMACD = new List<double>();
+            ListaDoSinalMACD = new List<double>();
 
-            HistóricoLinhaMACD.Clear();
-            HistórcioSinalMACD.Clear();
+            ListaDaMACD.Clear();
+            ListaDoSinalMACD.Clear();
 
 
             MédiaMóvelExponencial MME_Lenta = new MédiaMóvelExponencial(preçoFechamento, períodoLongo);
             MédiaMóvelExponencial MME_Rápida = new MédiaMóvelExponencial(preçoFechamento, períodoCurto);
-            MédiaMóvelExponencial MME_Sinal = new MédiaMóvelExponencial(preçoFechamento, períodoSinal);
 
             for (int i = 0; i < MME_Lenta.ListaDaMME.Count; i++)
             {
-                HistóricoLinhaMACD.Add(MME_Rápida.ListaDaMME[i] - MME_Lenta.ListaDaMME[i]);
+                ListaDaMACD.Add(MME_Rápida.ListaDaMME[i] - MME_Lenta.ListaDaMME[i]);
             }
 
+            MédiaMóvelExponencial MME_Sinal = new MédiaMóvelExponencial(ListaDaMACD, períodoSinal);
             for (int i = 1; i < MME_Sinal.ListaDaMME.Count; i++) //Varre HistóricoLinhaMACD do segundo elemento válido
             {
-                HistórcioSinalMACD.Add(MME_Sinal.ListaDaMME[i]);
+                ListaDoSinalMACD.Add(MME_Sinal.ListaDaMME[i]);
             }
         }
 
@@ -55,9 +55,9 @@ namespace FormatarHistóricoCotações
             HistográmaMACD = new List<double>();
             HistográmaMACD.Clear();
 
-            for (int i = 0; i < HistóricoLinhaMACD.Count; i++)
+            for (int i = 0; i < ListaDaMACD.Count; i++)
             {
-                HistográmaMACD.Add(HistóricoLinhaMACD[i] - HistórcioSinalMACD[i]);
+                HistográmaMACD.Add(ListaDaMACD[i] - ListaDoSinalMACD[i]);
             }
         }
     }

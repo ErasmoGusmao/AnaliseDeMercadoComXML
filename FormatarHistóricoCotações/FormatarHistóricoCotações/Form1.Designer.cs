@@ -121,7 +121,7 @@
             // 
             // testarConsultaXML
             // 
-            this.testarConsultaXML.Location = new System.Drawing.Point(192, 338);
+            this.testarConsultaXML.Location = new System.Drawing.Point(192, 334);
             this.testarConsultaXML.Name = "testarConsultaXML";
             this.testarConsultaXML.Size = new System.Drawing.Size(122, 44);
             this.testarConsultaXML.TabIndex = 6;
@@ -134,7 +134,7 @@
             this.dvgXML.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dvgXML.Location = new System.Drawing.Point(192, 25);
             this.dvgXML.Name = "dvgXML";
-            this.dvgXML.Size = new System.Drawing.Size(159, 159);
+            this.dvgXML.Size = new System.Drawing.Size(281, 238);
             this.dvgXML.TabIndex = 7;
             // 
             // grafico1
@@ -148,7 +148,7 @@
             legend1.Position.X = 10F;
             legend1.Position.Y = 5F;
             this.grafico1.Legends.Add(legend1);
-            this.grafico1.Location = new System.Drawing.Point(373, 25);
+            this.grafico1.Location = new System.Drawing.Point(511, 25);
             this.grafico1.Name = "grafico1";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -183,7 +183,7 @@
             legend2.Position.Width = 17.40042F;
             legend2.Position.X = 10F;
             this.gráfico2.Legends.Add(legend2);
-            this.gráfico2.Location = new System.Drawing.Point(373, 266);
+            this.gráfico2.Location = new System.Drawing.Point(511, 266);
             this.gráfico2.Name = "gráfico2";
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
