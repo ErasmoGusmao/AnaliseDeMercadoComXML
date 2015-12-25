@@ -130,7 +130,9 @@ namespace FormatarHistóricoCotações
 
             históricoPapel.Clear();
             fechamentoPapel.Clear();
+            
             carregarDadosPapeisXML();
+            
             gráficoHistóricoPapel();
             gráficoMACD();
             
@@ -192,24 +194,27 @@ namespace FormatarHistóricoCotações
             #region "Teste da classe Média Móvel Exponencial"
 
             //Testa a classe média móvel exponencial
-            MédiaMóvelExponencial MME = new MédiaMóvelExponencial();
             int períodoRápido = 10;
             int períodoIntermediário = 15;
             int períodoLento = 20;
 
+            MédiaMóvelExponencial MME_rápida = new MédiaMóvelExponencial(fechamentoPapel,períodoRápido);
+            MédiaMóvelExponencial MME_Intermediária = new MédiaMóvelExponencial(fechamentoPapel, períodoIntermediário);
+            MédiaMóvelExponencial MME_Lenta = new MédiaMóvelExponencial(fechamentoPapel, períodoLento);
+
             for (int i = períodoRápido - 1; i < históricoPapel.Count(); i++)
             {
-                this.grafico1.Series["MME_Rápida"].Points.AddXY(históricoPapel[i].Data, MME.GerarMME(fechamentoPapel, períodoRápido)[i]);
+                this.grafico1.Series["MME_Rápida"].Points.AddXY(históricoPapel[i].Data, MME_rápida.ListaDaMME[i]);
             }
 
             for (int i = períodoIntermediário - 1; i < históricoPapel.Count(); i++)
             {
-                this.grafico1.Series["MME_Intermediária"].Points.AddXY(históricoPapel[i].Data, MME.GerarMME(fechamentoPapel, períodoIntermediário)[i]);
+                this.grafico1.Series["MME_Intermediária"].Points.AddXY(históricoPapel[i].Data, MME_Intermediária.ListaDaMME[i]);
             }
 
             for (int i = períodoLento - 1; i < históricoPapel.Count(); i++)
             {
-                this.grafico1.Series["MME_Lenta"].Points.AddXY(históricoPapel[i].Data, MME.GerarMME(fechamentoPapel, períodoLento)[i]);
+                this.grafico1.Series["MME_Lenta"].Points.AddXY(históricoPapel[i].Data, MME_Lenta.ListaDaMME[i]);
             }
             #endregion
         }

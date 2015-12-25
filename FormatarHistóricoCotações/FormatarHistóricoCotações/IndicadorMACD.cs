@@ -35,15 +35,18 @@ namespace FormatarHistóricoCotações
             HistórcioSinalMACD.Clear();
 
 
-            MédiaMóvelExponencial MME = new MédiaMóvelExponencial();
-            for (int i = 0; i < MME.GerarMME(preçoFechamento, períodoLongo).Count; i++)
+            MédiaMóvelExponencial MME_Lenta = new MédiaMóvelExponencial(preçoFechamento, períodoLongo);
+            MédiaMóvelExponencial MME_Rápida = new MédiaMóvelExponencial(preçoFechamento, períodoCurto);
+            MédiaMóvelExponencial MME_Sinal = new MédiaMóvelExponencial(preçoFechamento, períodoSinal);
+
+            for (int i = 0; i < MME_Lenta.ListaDaMME.Count; i++)
             {
-                HistóricoLinhaMACD.Add(MME.GerarMME(preçoFechamento, períodoCurto)[i]-MME.GerarMME(preçoFechamento, períodoLongo)[i]);
+                HistóricoLinhaMACD.Add(MME_Rápida.ListaDaMME[i] - MME_Lenta.ListaDaMME[i]);
             }
 
-            for (int i = 1; i < MME.GerarMME(HistóricoLinhaMACD, períodoSinal).Count; i++) //Varre HistóricoLinhaMACD do segundo elemento válido
+            for (int i = 1; i < MME_Sinal.ListaDaMME.Count; i++) //Varre HistóricoLinhaMACD do segundo elemento válido
             {
-                HistórcioSinalMACD.Add(MME.GerarMME(HistóricoLinhaMACD, períodoSinal)[i]);
+                HistórcioSinalMACD.Add(MME_Sinal.ListaDaMME[i]);
             }
         }
 

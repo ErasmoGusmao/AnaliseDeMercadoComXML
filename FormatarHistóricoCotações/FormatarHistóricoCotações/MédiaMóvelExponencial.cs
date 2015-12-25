@@ -14,9 +14,14 @@ namespace FormatarHistóricoCotações
 {
     class MédiaMóvelExponencial
     {
-        private List<double> ListaDaMME;
+        public List<double> ListaDaMME { get; private set; }
 
-        public List<double> GerarMME(List<double> fechamento, int período) //Retornará uma lista com a média móvel exponencila para elaboração do gráfico
+        public MédiaMóvelExponencial(List<double> fechamento, int período) 
+        {
+            GerarMME(fechamento, período);
+        }
+
+        public void GerarMME(List<double> fechamento, int período) //Retornará uma lista com a média móvel exponencila para elaboração do gráfico
         {
             ListaDaMME = new List<double>();
             ListaDaMME.Clear(); //Limpo a lista antes de começar
@@ -27,8 +32,6 @@ namespace FormatarHistóricoCotações
             {
                 ListaDaMME.Add((ListaDaMME[i] + (((double)2 / (double)(período + 1))) * (fechamento[i] - ListaDaMME[i])));//Formula da MME
             }
-
-            return ListaDaMME;
         }
     }
 }
