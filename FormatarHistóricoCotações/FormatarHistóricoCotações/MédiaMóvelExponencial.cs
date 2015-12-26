@@ -31,13 +31,8 @@ namespace FormatarHistóricoCotações
                 ListaDaMME.Add(0); // Os primeiros elementos da lista serão zero
             }
 
-            double soma = 0;
-            for (int i = 0; i < período; i++)
-            {
-                soma += fechamento[i];
-            }
-
-            ListaDaMME.Add(soma / ((double)período)); //O elemento de número [perído-1] é a média dos anteriroes
+            Estatística estatística = new Estatística();
+            ListaDaMME.Add(estatística.Média(fechamento, período)); //O elemento de número [perído-1] é a média dos anteriroes
 
             for (int i = período-1; i < fechamento.Count; i++) //Varre todos os elementos restantes do histórico que será tirado a MME
             {
