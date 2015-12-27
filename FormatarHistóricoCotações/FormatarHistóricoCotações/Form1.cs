@@ -137,6 +137,15 @@ namespace FormatarHistóricoCotações
             gráficoMACD();
 
             //testaEstatística();
+            //testarMédiaMóvelSimples();
+        }
+
+        private List<double> testarMédiaMóvelSimples()
+        {
+            MédiaMóvelSimples MMS = new MédiaMóvelSimples();
+            int período = 10;
+            MMS.GerarMMS(fechamentoPapel, período);
+            return MMS.ListaDaMMS;
         }
 
         private void carregarDadosPapeisXML()

@@ -20,14 +20,10 @@ namespace FormatarHistóricoCotações
                 ListaDaMMS.Add(0); // Os primeiros elementos da lista serão zero
             }
 
-            for (int i = 0; i < fechamento.Count-período; i++)
+            Estatística estatística = new Estatística();
+            foreach (double valor in estatística.MédiaMóvel(fechamento,período))
             {
-                double soma = 0;
-                for (int j = i; j < período+i; j++)
-                {
-                    soma += fechamento[j];
-                }
-                ListaDaMMS.Add(soma / ((double)período));
+                ListaDaMMS.Add(valor);
             }
         }
     }
