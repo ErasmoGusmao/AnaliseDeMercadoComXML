@@ -20,10 +20,10 @@ namespace FormatarHistóricoCotações
                 ListaDaMMS.Add(0); // Os primeiros elementos da lista serão zero
             }
 
-            for (int i = 0; i < fechamento.Count; i++)
+            for (int i = 0; i < fechamento.Count-período; i++)
             {
                 double soma = 0;
-                for (int j = i; j < período; j++)
+                for (int j = i; j < período+i; j++)
                 {
                     soma += fechamento[j];
                 }

@@ -135,7 +135,8 @@ namespace FormatarHistóricoCotações
             
             gráficoHistóricoPapel();
             gráficoMACD();
-            
+
+            //testaEstatística();
         }
 
         private void carregarDadosPapeisXML()
@@ -238,6 +239,25 @@ namespace FormatarHistóricoCotações
                 this.gráfico2.Series["LineMACD"].Points.AddXY(históricoPapel[i].Data, MACD.ListaDaMACD[i]);
                 this.gráfico2.Series["sinal"].Points.AddXY(históricoPapel[i].Data, MACD.ListaDoSinalMACD[i]);
             }
+        }
+
+        private void testaEstatística() 
+        {
+            Estatística estatística = new Estatística();
+            int períodoEstatística = 10;
+
+            estatística.Soma(fechamentoPapel, períodoEstatística);
+            estatística.SomaMóvel(fechamentoPapel, períodoEstatística);
+            estatística.Média(fechamentoPapel, períodoEstatística);
+            estatística.MédiaMóvel(fechamentoPapel, períodoEstatística);
+            estatística.VariânciaP(fechamentoPapel, períodoEstatística);
+            estatística.VariânciaPMóvel(fechamentoPapel, períodoEstatística);
+            estatística.VariânciaA(fechamentoPapel, períodoEstatística);
+            estatística.VariânciaAMóvel(fechamentoPapel, períodoEstatística);
+            estatística.DesvPadP(fechamentoPapel, períodoEstatística);
+            estatística.DesvPadPMóvel(fechamentoPapel, períodoEstatística);
+            estatística.DesvPadA(fechamentoPapel, períodoEstatística);
+            estatística.DesvPadAMóvel(fechamentoPapel, períodoEstatística);
         }
     }
 }
