@@ -25,7 +25,7 @@ namespace FormatarHistóricoCotações
             GerarMME(HistóricoPapel, período);
         }
 
-        public void GerarMME(List<double> fechamento, int período) 
+        private void GerarMME(List<double> fechamento, int período) 
         {//Retornará uma lista com a média móvel exponencila para elaboração do gráfico
             ListaDaMME = new List<double>();
             ListaDaMME.Clear(); //Limpo a lista antes de começar
@@ -43,7 +43,7 @@ namespace FormatarHistóricoCotações
                 ListaDaMME.Add((ListaDaMME[i] + (((double)2 / (double)(período + 1))) * (fechamento[i] - ListaDaMME[i])));//Formula da MME
             }
         }
-        public void GerarMME(List<Papeis> HistóricoPapel, int período)
+        private void GerarMME(List<Papeis> HistóricoPapel, int período)
         {//Retornará uma lista com a média móvel exponencila para elaboração do gráfico
             ListaDaMME = new List<double>();
             ListaDaMME.Clear(); //Limpo a lista antes de começar

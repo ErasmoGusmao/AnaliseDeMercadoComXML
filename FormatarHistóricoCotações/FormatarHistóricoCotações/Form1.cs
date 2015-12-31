@@ -28,7 +28,7 @@ namespace FormatarHistóricoCotações
         ArquivoSaídaXML históricoSaídaXML = new ArquivoSaídaXML();
 
         List<Papeis> históricoPapel = new List<Papeis>();
-        List<double> fechamentoPapel = new List<double>();
+        //List<double> fechamentoPapel = new List<double>();
 
         
         public Form1()
@@ -129,7 +129,7 @@ namespace FormatarHistóricoCotações
             codigoPapelisteBox = listBoxPapeis.Items[listBoxPapeis.SelectedIndex].ToString();
 
             históricoPapel.Clear();
-            fechamentoPapel.Clear();
+            //fechamentoPapel.Clear();
             
             carregarDadosPapeisXML();
             
@@ -142,9 +142,8 @@ namespace FormatarHistóricoCotações
 
         private List<double> testarMédiaMóvelSimples()
         {
-            MédiaMóvelSimples MMS = new MédiaMóvelSimples();
             int período = 10;
-            MMS.GerarMMS(fechamentoPapel, período);
+            MédiaMóvelSimples MMS = new MédiaMóvelSimples(históricoPapel, período);
             return MMS.ListaDaMMS;
         }
 
@@ -180,7 +179,7 @@ namespace FormatarHistóricoCotações
                     Volume = double.Parse(item.Element("VOLUME").Value)
                 });
 
-                fechamentoPapel.Add(double.Parse(item.Element("P.Fech").Value)); //Carrego a lista com o histórico do fechamento do papel
+                //fechamentoPapel.Add(double.Parse(item.Element("P.Fech").Value)); //Carrego a lista com o histórico do fechamento do papel
             }
         }
 

@@ -10,7 +10,16 @@ namespace FormatarHistóricoCotações
     {
         public List<double> ListaDaMMS { get; private set; }
 
-        public void GerarMMS(List<double> fechamento, int período) 
+        public MédiaMóvelSimples(List<double> fechamento, int período) 
+        {
+            GerarMMS(fechamento, período);
+        }
+        public MédiaMóvelSimples(List<Papeis> HistóricoPapel, int período)
+        {
+            GerarMMS(HistóricoPapel, período);
+        }
+
+        private void GerarMMS(List<double> fechamento, int período) 
         {
             ListaDaMMS = new List<double>();
             ListaDaMMS.Clear();
@@ -26,7 +35,7 @@ namespace FormatarHistóricoCotações
                 ListaDaMMS.Add(valor);
             }
         }
-        public void GerarMMS(List<Papeis> HistóricoPapel, int período)
+        private void GerarMMS(List<Papeis> HistóricoPapel, int período)
         {
             ListaDaMMS = new List<double>();
             ListaDaMMS.Clear();
