@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ArquivoSaídaTXT.cs" />
     <Compile Include="ArquivoSaídaXML.cs" />
+    <Compile Include="BandasDeBollinger.cs" />
     <Compile Include="Estatística.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

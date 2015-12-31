@@ -22,18 +22,6 @@ namespace FormatarHistóricoCotações
 
         public IndicadorMACD(List<double> preçoFechamento,int períodoCurto, int períodoLongo, int períodoSinal) 
         {//Construtor
-            GerarHistóricoMACD(preçoFechamento,períodoCurto,períodoLongo,períodoSinal);
-            GerarHistográmaMACD();
-        }
-        public IndicadorMACD(List<Papeis> HistóricoPapel, int períodoCurto, int períodoLongo, int períodoSinal)
-        {//Construtor
-            GerarHistóricoMACD(HistóricoPapel, períodoCurto, períodoLongo, períodoSinal);
-            GerarHistográmaMACD();
-        }
-
-        private void GerarHistóricoMACD(List<double> preçoFechamento,int períodoCurto, int períodoLongo, int períodoSinal) // Gera a linha do indicador MACD
-        {
-
             ListaDaMACD = new List<double>();
             listaTempMACD = new List<double>();
             ListaDoSinalMACD = new List<double>();
@@ -42,7 +30,25 @@ namespace FormatarHistóricoCotações
             ListaDoSinalMACD.Clear();
             listaTempMACD.Clear();
 
+            GerarHistóricoMACD(preçoFechamento,períodoCurto,períodoLongo,períodoSinal);
+            GerarHistográmaMACD();
+        }
+        public IndicadorMACD(List<Papeis> HistóricoPapel, int períodoCurto, int períodoLongo, int períodoSinal)
+        {//Construtor
+            ListaDaMACD = new List<double>();
+            listaTempMACD = new List<double>();
+            ListaDoSinalMACD = new List<double>();
 
+            ListaDaMACD.Clear();
+            ListaDoSinalMACD.Clear();
+            listaTempMACD.Clear();
+
+            GerarHistóricoMACD(HistóricoPapel, períodoCurto, períodoLongo, períodoSinal);
+            GerarHistográmaMACD();
+        }
+
+        private void GerarHistóricoMACD(List<double> preçoFechamento,int períodoCurto, int períodoLongo, int períodoSinal) // Gera a linha do indicador MACD
+        {
             MédiaMóvelExponencial MME_Lenta = new MédiaMóvelExponencial(preçoFechamento, períodoLongo);
             MédiaMóvelExponencial MME_Rápida = new MédiaMóvelExponencial(preçoFechamento, períodoCurto);
 
@@ -74,16 +80,6 @@ namespace FormatarHistóricoCotações
         }
         private void GerarHistóricoMACD(List<Papeis> HistóricoPapel, int períodoCurto, int períodoLongo, int períodoSinal) // Gera a linha do indicador MACD
         {
-
-            ListaDaMACD = new List<double>();
-            listaTempMACD = new List<double>();
-            ListaDoSinalMACD = new List<double>();
-
-            ListaDaMACD.Clear();
-            ListaDoSinalMACD.Clear();
-            listaTempMACD.Clear();
-
-
             MédiaMóvelExponencial MME_Lenta = new MédiaMóvelExponencial(HistóricoPapel, períodoLongo);
             MédiaMóvelExponencial MME_Rápida = new MédiaMóvelExponencial(HistóricoPapel, períodoCurto);
 

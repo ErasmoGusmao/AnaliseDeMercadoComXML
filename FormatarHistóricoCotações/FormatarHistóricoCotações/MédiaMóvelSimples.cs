@@ -12,18 +12,21 @@ namespace FormatarHistóricoCotações
 
         public MédiaMóvelSimples(List<double> fechamento, int período) 
         {
+            ListaDaMMS = new List<double>();
+            ListaDaMMS.Clear();
+
             GerarMMS(fechamento, período);
         }
         public MédiaMóvelSimples(List<Papeis> HistóricoPapel, int período)
         {
+            ListaDaMMS = new List<double>();
+            ListaDaMMS.Clear();
+
             GerarMMS(HistóricoPapel, período);
         }
 
         private void GerarMMS(List<double> fechamento, int período) 
         {
-            ListaDaMMS = new List<double>();
-            ListaDaMMS.Clear();
-
             for (int i = 0; i < período - 1; i++)
             {
                 ListaDaMMS.Add(0); // Os primeiros elementos da lista serão zero

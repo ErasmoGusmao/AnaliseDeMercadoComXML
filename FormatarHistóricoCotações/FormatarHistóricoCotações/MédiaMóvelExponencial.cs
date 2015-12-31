@@ -18,18 +18,21 @@ namespace FormatarHistóricoCotações
 
         public MédiaMóvelExponencial(List<double> fechamento, int período) 
         {
+            ListaDaMME = new List<double>();
+            ListaDaMME.Clear(); //Limpo a lista antes de começar
+
             GerarMME(fechamento, período);
         }
         public MédiaMóvelExponencial(List<Papeis> HistóricoPapel, int período)
         {
+            ListaDaMME = new List<double>();
+            ListaDaMME.Clear(); //Limpo a lista antes de começar
+
             GerarMME(HistóricoPapel, período);
         }
 
         private void GerarMME(List<double> fechamento, int período) 
         {//Retornará uma lista com a média móvel exponencila para elaboração do gráfico
-            ListaDaMME = new List<double>();
-            ListaDaMME.Clear(); //Limpo a lista antes de começar
-
             for (int i = 0; i < período-1; i++)
             {
                 ListaDaMME.Add(0); // Os primeiros elementos da lista serão zero
@@ -45,9 +48,6 @@ namespace FormatarHistóricoCotações
         }
         private void GerarMME(List<Papeis> HistóricoPapel, int período)
         {//Retornará uma lista com a média móvel exponencila para elaboração do gráfico
-            ListaDaMME = new List<double>();
-            ListaDaMME.Clear(); //Limpo a lista antes de começar
-
             for (int i = 0; i < período - 1; i++)
             {
                 ListaDaMME.Add(0); // Os primeiros elementos da lista serão zero

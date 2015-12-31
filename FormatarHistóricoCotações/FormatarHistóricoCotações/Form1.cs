@@ -28,7 +28,7 @@ namespace FormatarHistóricoCotações
         ArquivoSaídaXML históricoSaídaXML = new ArquivoSaídaXML();
 
         List<Papeis> históricoPapel = new List<Papeis>();
-        //List<double> fechamentoPapel = new List<double>();
+        List<double> fechamentoPapel = new List<double>();
 
         
         public Form1()
@@ -48,13 +48,30 @@ namespace FormatarHistóricoCotações
 
             grafico1.Series.Add("MME_Intermediária");
             grafico1.Series["MME_Intermediária"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            grafico1.Series["MME_Intermediária"].Color = Color.Black;
+            grafico1.Series["MME_Intermediária"].Color = Color.Purple;
             this.grafico1.Series["MME_Intermediária"].IsVisibleInLegend = false; //desabilita legenda
 
             grafico1.Series.Add("MME_Lenta");
             grafico1.Series["MME_Lenta"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             grafico1.Series["MME_Lenta"].Color = Color.Blue;
             this.grafico1.Series["MME_Lenta"].IsVisibleInLegend = false; //desabilita legenda
+
+            //Bandas de Bollinger
+            grafico1.Series.Add("MMS");
+            grafico1.Series["MMS"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            grafico1.Series["MMS"].Color = Color.Black;
+            this.grafico1.Series["MMS"].IsVisibleInLegend = false; //desabilita legenda
+
+            grafico1.Series.Add("BB_Inf");
+            grafico1.Series["BB_Inf"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            grafico1.Series["BB_Inf"].Color = Color.Pink;
+            this.grafico1.Series["BB_Inf"].IsVisibleInLegend = false; //desabilita legenda
+
+            grafico1.Series.Add("BB_Sup");
+            grafico1.Series["BB_Sup"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            grafico1.Series["BB_Sup"].Color = Color.GreenYellow;
+            this.grafico1.Series["BB_Sup"].IsVisibleInLegend = false; //desabilita legenda
+
             #endregion
 
             #region "Inicialização do gráfico2"
@@ -179,17 +196,25 @@ namespace FormatarHistóricoCotações
                     Volume = double.Parse(item.Element("VOLUME").Value)
                 });
 
-                //fechamentoPapel.Add(double.Parse(item.Element("P.Fech").Value)); //Carrego a lista com o histórico do fechamento do papel
+                fechamentoPapel.Add(double.Parse(item.Element("P.Fech").Value)); //Carrego a lista com o histórico do fechamento do papel
             }
         }
 
         private void gráficoHistóricoPapel() 
         {
             //Limpa gráfico 1
-            this.grafico1.Series[0].Points.Clear(); // Histórico de fechamento
+            // Histórico de fechamento
+            this.grafico1.Series[0].Points.Clear();
+
+            // Médias móveis exponenciais
             this.grafico1.Series["MME_Rápida"].Points.Clear();
             this.grafico1.Series["MME_Intermediária"].Points.Clear();
             this.grafico1.Series["MME_Lenta"].Points.Clear();
+
+            //Banda de Bollinger
+            this.grafico1.Series["MMS"].Points.Clear();
+            this.grafico1.Series["BB_Inf"].Points.Clear();
+            this.grafico1.Series["BB_Sup"].Points.Clear();
 
             this.grafico1.Titles[0].Text = históricoPapel[0].CODIGO + "- " + históricoPapel[0].Nome;
             this.grafico1.Series["Frechamento"].IsVisibleInLegend = false; //desabilita legenda
@@ -226,6 +251,20 @@ namespace FormatarHistóricoCotações
                 this.grafico1.Series["MME_Lenta"].Points.AddXY(históricoPapel[i].Data, MME_Lenta.ListaDaMME[i]);
             }
             #endregion
+
+            #region "Teste das Bandas de Bollinger"
+            int período = 20;
+            double desvMédia = 2;
+
+            BandasDeBollinger bandaBollinger = new BandasDeBollinger(fechamentoPapel, período, desvMédia);
+            for (int i = período - 1; i < históricoPapel.Count(); i++)
+            {
+                this.grafico1.Series["MMS"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.MédiaDaBanda[i]);
+                this.grafico1.Series["BB_Inf"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.BandaInferior[i]);
+                this.grafico1.Series["BB_Sup"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.BandaSuperior[i]);
+            }
+            #endregion
+
         }
 
         private void gráficoMACD() 
