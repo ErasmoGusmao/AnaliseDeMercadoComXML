@@ -123,7 +123,7 @@
             // 
             this.testarConsultaXML.Location = new System.Drawing.Point(192, 334);
             this.testarConsultaXML.Name = "testarConsultaXML";
-            this.testarConsultaXML.Size = new System.Drawing.Size(122, 44);
+            this.testarConsultaXML.Size = new System.Drawing.Size(123, 48);
             this.testarConsultaXML.TabIndex = 6;
             this.testarConsultaXML.Text = "Testar consulta *.xml";
             this.testarConsultaXML.UseVisualStyleBackColor = true;

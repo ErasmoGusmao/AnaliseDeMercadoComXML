@@ -146,7 +146,7 @@ namespace FormatarHistóricoCotações
             codigoPapelisteBox = listBoxPapeis.Items[listBoxPapeis.SelectedIndex].ToString();
 
             históricoPapel.Clear();
-            //fechamentoPapel.Clear();
+            fechamentoPapel.Clear();
             
             carregarDadosPapeisXML();
             
@@ -155,13 +155,13 @@ namespace FormatarHistóricoCotações
 
             //testaEstatística();
             //testarMédiaMóvelSimples();
+            testarIFR();
         }
 
-        private List<double> testarMédiaMóvelSimples()
+        private void testarIFR()
         {
-            int período = 10;
-            MédiaMóvelSimples MMS = new MédiaMóvelSimples(históricoPapel, período);
-            return MMS.ListaDaMMS;
+            int período = 9;
+            ÍndiceDeForçaRelativa ifr_test = new ÍndiceDeForçaRelativa(fechamentoPapel, período);
         }
 
         private void carregarDadosPapeisXML()
@@ -198,6 +198,13 @@ namespace FormatarHistóricoCotações
 
                 fechamentoPapel.Add(double.Parse(item.Element("P.Fech").Value)); //Carrego a lista com o histórico do fechamento do papel
             }
+        }
+
+        private List<double> testarMédiaMóvelSimples()
+        {
+            int período = 10;
+            MédiaMóvelSimples MMS = new MédiaMóvelSimples(históricoPapel, período);
+            return MMS.ListaDaMMS;
         }
 
         private void gráficoHistóricoPapel() 
@@ -256,7 +263,7 @@ namespace FormatarHistóricoCotações
             int período = 20;
             double desvMédia = 2;
 
-            BandasDeBollinger bandaBollinger = new BandasDeBollinger(fechamentoPapel, período, desvMédia);
+            BandasDeBollinger bandaBollinger = new BandasDeBollinger(históricoPapel, período, desvMédia);
             for (int i = período - 1; i < históricoPapel.Count(); i++)
             {
                 this.grafico1.Series["MMS"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.MédiaDaBanda[i]);
