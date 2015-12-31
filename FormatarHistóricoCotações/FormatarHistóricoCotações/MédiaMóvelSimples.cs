@@ -26,5 +26,21 @@ namespace FormatarHistóricoCotações
                 ListaDaMMS.Add(valor);
             }
         }
+        public void GerarMMS(List<Papeis> HistóricoPapel, int período)
+        {
+            ListaDaMMS = new List<double>();
+            ListaDaMMS.Clear();
+
+            for (int i = 0; i < período - 1; i++)
+            {
+                ListaDaMMS.Add(0); // Os primeiros elementos da lista serão zero
+            }
+
+            Estatística estatística = new Estatística();
+            foreach (double valor in estatística.MédiaMóvel(HistóricoPapel, período))
+            {
+                ListaDaMMS.Add(valor);
+            }
+        }
     }
 }

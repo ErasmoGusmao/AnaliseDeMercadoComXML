@@ -208,9 +208,9 @@ namespace FormatarHistóricoCotações
             int períodoIntermediário = 15;
             int períodoLento = 20;
 
-            MédiaMóvelExponencial MME_rápida = new MédiaMóvelExponencial(fechamentoPapel,períodoRápido);
-            MédiaMóvelExponencial MME_Intermediária = new MédiaMóvelExponencial(fechamentoPapel, períodoIntermediário);
-            MédiaMóvelExponencial MME_Lenta = new MédiaMóvelExponencial(fechamentoPapel, períodoLento);
+            MédiaMóvelExponencial MME_rápida = new MédiaMóvelExponencial(históricoPapel,períodoRápido);
+            MédiaMóvelExponencial MME_Intermediária = new MédiaMóvelExponencial(históricoPapel, períodoIntermediário);
+            MédiaMóvelExponencial MME_Lenta = new MédiaMóvelExponencial(históricoPapel, períodoLento);
 
             for (int i = períodoRápido - 1; i < históricoPapel.Count(); i++)
             {
@@ -240,7 +240,7 @@ namespace FormatarHistóricoCotações
             int períodoLongoMACD = 26;
             int períodoSinalMACD = 9;
 
-            IndicadorMACD MACD = new IndicadorMACD(fechamentoPapel, períodoCurtoMACD, períodoLongoMACD, períodoSinalMACD);
+            IndicadorMACD MACD = new IndicadorMACD(históricoPapel, períodoCurtoMACD, períodoLongoMACD, períodoSinalMACD);
 
             for (int i = 0; i < históricoPapel.Count(); i++)
             {
@@ -255,18 +255,18 @@ namespace FormatarHistóricoCotações
             Estatística estatística = new Estatística();
             int períodoEstatística = 10;
 
-            estatística.Soma(fechamentoPapel, períodoEstatística);
-            estatística.SomaMóvel(fechamentoPapel, períodoEstatística);
-            estatística.Média(fechamentoPapel, períodoEstatística);
-            estatística.MédiaMóvel(fechamentoPapel, períodoEstatística);
-            estatística.VariânciaP(fechamentoPapel, períodoEstatística);
-            estatística.VariânciaPMóvel(fechamentoPapel, períodoEstatística);
-            estatística.VariânciaA(fechamentoPapel, períodoEstatística);
-            estatística.VariânciaAMóvel(fechamentoPapel, períodoEstatística);
-            estatística.DesvPadP(fechamentoPapel, períodoEstatística);
-            estatística.DesvPadPMóvel(fechamentoPapel, períodoEstatística);
-            estatística.DesvPadA(fechamentoPapel, períodoEstatística);
-            estatística.DesvPadAMóvel(fechamentoPapel, períodoEstatística);
+            estatística.Soma(históricoPapel, períodoEstatística);
+            estatística.SomaMóvel(históricoPapel, períodoEstatística);
+            estatística.Média(históricoPapel, períodoEstatística);
+            estatística.MédiaMóvel(históricoPapel, períodoEstatística);
+            estatística.VariânciaP(históricoPapel, períodoEstatística);
+            estatística.VariânciaPMóvel(históricoPapel, períodoEstatística);
+            estatística.VariânciaA(históricoPapel, períodoEstatística);
+            estatística.VariânciaAMóvel(históricoPapel, períodoEstatística);
+            estatística.DesvPadP(históricoPapel, períodoEstatística);
+            estatística.DesvPadPMóvel(históricoPapel, períodoEstatística);
+            estatística.DesvPadA(históricoPapel, períodoEstatística);
+            estatística.DesvPadAMóvel(históricoPapel, períodoEstatística);
         }
     }
 }
