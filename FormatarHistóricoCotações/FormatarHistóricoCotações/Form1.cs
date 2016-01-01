@@ -87,6 +87,13 @@ namespace FormatarHistóricoCotações
             this.gráfico2.Series["sinal"].IsVisibleInLegend = false; //desabilita legenda
             #endregion
 
+            #region "Inicialização do gráfico3"
+            //Novas séries gráfico 3
+            //gráfico3.Series.Add("VOLUME");
+            gráfico3.Series["VOLUME"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            gráfico3.Series["VOLUME"].Color = Color.Red;
+            this.gráfico3.Series["VOLUME"].IsVisibleInLegend = true; //desabilita legenda
+            #endregion
         }
 
         private void ConcatenaArquivos_Click(object sender, EventArgs e)
@@ -153,9 +160,10 @@ namespace FormatarHistóricoCotações
             gráficoHistóricoPapel();
             gráficoMACD();
 
+            gráficoVolume();
             //testaEstatística();
             //testarMédiaMóvelSimples();
-            testarIFR();
+            //testarIFR();
         }
 
         private void testarIFR()
@@ -292,6 +300,18 @@ namespace FormatarHistóricoCotações
                 this.gráfico2.Series["MACD"].Points.AddXY(históricoPapel[i].Data, MACD.HistográmaMACD[i]);
                 this.gráfico2.Series["LineMACD"].Points.AddXY(históricoPapel[i].Data, MACD.ListaDaMACD[i]);
                 this.gráfico2.Series["sinal"].Points.AddXY(históricoPapel[i].Data, MACD.ListaDoSinalMACD[i]);
+            }
+        }
+
+        private void gráficoVolume()
+        {
+            //Limpa gráfico 3
+            this.gráfico3.Series["VOLUME"].Points.Clear();
+            this.gráfico3.Series["VOLUME"].LegendText = "R$ (Milhões)"; // +hitoricoPapel[0].CODIGO; //Modifico a legenda
+
+            for (int i = 0; i < históricoPapel.Count(); i++)
+            {
+                this.gráfico3.Series["VOLUME"].Points.AddXY(históricoPapel[i].Data, históricoPapel[i].Volume/(1000000));
             }
         }
 

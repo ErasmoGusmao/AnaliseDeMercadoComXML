@@ -35,6 +35,9 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ConcatenaArquivos = new System.Windows.Forms.Button();
@@ -47,10 +50,12 @@
             this.dvgXML = new System.Windows.Forms.DataGridView();
             this.grafico1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.gráfico2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.gráfico3 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.gBoxTipoSaída.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dvgXML)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grafico1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gráfico2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gráfico3)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -188,17 +193,46 @@
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
             series2.Name = "MACD";
-            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
             this.gráfico2.Series.Add(series2);
-            this.gráfico2.Size = new System.Drawing.Size(478, 239);
+            this.gráfico2.Size = new System.Drawing.Size(478, 143);
             this.gráfico2.TabIndex = 10;
             this.gráfico2.Text = "chart1";
+            // 
+            // gráfico3
+            // 
+            chartArea3.Name = "ChartArea1";
+            chartArea3.Position.Auto = false;
+            chartArea3.Position.Height = 85F;
+            chartArea3.Position.Width = 94F;
+            chartArea3.Position.X = 3F;
+            chartArea3.Position.Y = 15F;
+            this.gráfico3.ChartAreas.Add(chartArea3);
+            legend3.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
+            legend3.IsTextAutoFit = false;
+            legend3.Name = "Legend1";
+            legend3.Position.Auto = false;
+            legend3.Position.Height = 23.76238F;
+            legend3.Position.Width = 17.40042F;
+            legend3.Position.X = 10F;
+            this.gráfico3.Legends.Add(legend3);
+            this.gráfico3.Location = new System.Drawing.Point(511, 415);
+            this.gráfico3.Name = "gráfico3";
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "VOLUME";
+            series3.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
+            this.gráfico3.Series.Add(series3);
+            this.gráfico3.Size = new System.Drawing.Size(478, 103);
+            this.gráfico3.TabIndex = 11;
+            this.gráfico3.Text = "chart1";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1001, 530);
+            this.Controls.Add(this.gráfico3);
             this.Controls.Add(this.gráfico2);
             this.Controls.Add(this.grafico1);
             this.Controls.Add(this.dvgXML);
@@ -215,6 +249,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dvgXML)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.grafico1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gráfico2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gráfico3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -234,6 +269,7 @@
         private System.Windows.Forms.DataGridView dvgXML;
         private System.Windows.Forms.DataVisualization.Charting.Chart grafico1;
         private System.Windows.Forms.DataVisualization.Charting.Chart gráfico2;
+        private System.Windows.Forms.DataVisualization.Charting.Chart gráfico3;
     }
 }
 
