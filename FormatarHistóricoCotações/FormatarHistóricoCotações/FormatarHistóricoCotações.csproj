@@ -55,6 +55,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="IndicadorADX.cs" />
     <Compile Include="IndicadorMACD.cs" />
     <Compile Include="MédiaMóvelExponencial.cs" />
     <Compile Include="MédiaMóvelSimples.cs" />

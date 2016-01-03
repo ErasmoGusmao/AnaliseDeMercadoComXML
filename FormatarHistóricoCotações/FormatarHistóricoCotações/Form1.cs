@@ -29,6 +29,9 @@ namespace FormatarHistóricoCotações
 
         List<Papeis> históricoPapel = new List<Papeis>();
         List<double> fechamentoPapel = new List<double>();
+        List<double> maximaPapel = new List<double>();
+        List<double> minimaPapel = new List<double>();
+        List<DateTime> data = new List<DateTime>();
 
         
         public Form1()
@@ -122,7 +125,7 @@ namespace FormatarHistóricoCotações
             
         }
 
-        private void testarConsultaXML_Click(object sender, EventArgs e)
+        private void ConsultaXML_Click(object sender, EventArgs e)
         {
             XDocument docTeste = XDocument.Load(arquivoXMLSalvo);
 
@@ -161,16 +164,19 @@ namespace FormatarHistóricoCotações
             gráficoMACD();
 
             gráficoVolume();
+
+            testarIndicadorADX();
             //testaEstatística();
             //testarMédiaMóvelSimples();
             //testarIFR();
         }
 
-        private void testarIFR()
+        private void testarIndicadorADX()
         {
-            int período = 9;
-            ÍndiceDeForçaRelativa ifr_test = new ÍndiceDeForçaRelativa(fechamentoPapel, período);
+            int período = 20;
+            IndicadorADX indicador = new IndicadorADX(fechamentoPapel, maximaPapel, minimaPapel, período);
         }
+
 
         private void carregarDadosPapeisXML()
         {
@@ -204,7 +210,10 @@ namespace FormatarHistóricoCotações
                     Volume = double.Parse(item.Element("VOLUME").Value)
                 });
 
-                fechamentoPapel.Add(double.Parse(item.Element("P.Fech").Value)); //Carrego a lista com o histórico do fechamento do papel
+                fechamentoPapel.Add(double.Parse(item.Element("P.Fech").Value));    //Carrego a lista com o histórico do fechamento do papel
+                maximaPapel.Add(double.Parse(item.Element("P.Max").Value));         //Carrego a lista com o histórico dos preços de máxima do papel
+                minimaPapel.Add(double.Parse(item.Element("P.Min").Value));         //Carrego a lista com o histórico dos preços de mínima do papel
+                data.Add(DateTime.Parse(item.Element("DATA").Value));               //Carrego a lista com o histórico das datas do papel
             }
         }
 
@@ -332,6 +341,12 @@ namespace FormatarHistóricoCotações
             estatística.DesvPadPMóvel(históricoPapel, períodoEstatística);
             estatística.DesvPadA(históricoPapel, períodoEstatística);
             estatística.DesvPadAMóvel(históricoPapel, períodoEstatística);
+        }
+
+        private void testarIFR()
+        {
+            int período = 9;
+            ÍndiceDeForçaRelativa ifr_test = new ÍndiceDeForçaRelativa(fechamentoPapel, período);
         }
     }
 }

@@ -132,7 +132,7 @@
             this.testarConsultaXML.TabIndex = 6;
             this.testarConsultaXML.Text = "Testar consulta *.xml";
             this.testarConsultaXML.UseVisualStyleBackColor = true;
-            this.testarConsultaXML.Click += new System.EventHandler(this.testarConsultaXML_Click);
+            this.testarConsultaXML.Click += new System.EventHandler(this.ConsultaXML_Click);
             // 
             // dvgXML
             // 
