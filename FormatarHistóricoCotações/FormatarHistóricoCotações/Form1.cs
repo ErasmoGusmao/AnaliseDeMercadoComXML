@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
+using System.Windows.Forms.DataVisualization.Charting;  //Para usar Series
 
 namespace FormatarHistóricoCotações
 {
@@ -33,16 +34,39 @@ namespace FormatarHistóricoCotações
         List<double> minimaPapel = new List<double>();
         List<DateTime> data = new List<DateTime>();
 
-        
+
         public Form1()
         {
             InitializeComponent();
             label1.Text = "Lista contem: " + codigoPapeis.Count() + " papel.";
 
-            grafico1.Series["Frechamento"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            grafico1.Series["Frechamento"].Color = Color.Brown;
+            #region "Gráfico com Candlestick"
+            
+            //grafico1.Series["Frechamento"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            //grafico1.Series["Frechamento"].Color = Color.Brown;
 
-            #region "Inicialização do gráfico 1"
+            Series Ação = new Series("Ação");
+            grafico1.Series.Add(Ação);
+
+            //Set o tipo de gráfico
+            grafico1.Series["Ação"].ChartType = SeriesChartType.Candlestick;
+
+            //Set the style of the open-close marks
+            grafico1.Series["Ação"]["OpenCloseStyle"] = "Triangle";
+
+            // Show both open and close marks
+            grafico1.Series["Ação"]["ShowOpenClose"] = "Both";
+
+            // Set point width
+            grafico1.Series["Ação"]["PointWidth"] = "1.0";
+
+            // Set colors bars
+            grafico1.Series["Ação"]["PriceUpColor"] = "Green"; // <<== use text indexer for series
+            grafico1.Series["Ação"]["PriceDownColor"] = "Red"; // <<== use text indexer for series
+
+            #endregion
+
+            #region "Inicialização do gráfico 1 Médias móveis Exponenciais"
             //Novas séries gráfico 1
             grafico1.Series.Add("MME_Rápida");
             grafico1.Series["MME_Rápida"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -177,7 +201,6 @@ namespace FormatarHistóricoCotações
             IndicadorADX indicador = new IndicadorADX(fechamentoPapel, maximaPapel, minimaPapel, período);
         }
 
-
         private void carregarDadosPapeisXML()
         {
             //Fazer gráfico com dados do arquivo xml
@@ -228,7 +251,11 @@ namespace FormatarHistóricoCotações
         {
             //Limpa gráfico 1
             // Histórico de fechamento
-            this.grafico1.Series[0].Points.Clear();
+            //this.grafico1.Series[0].Points.Clear();
+            this.grafico1.Series[0].IsVisibleInLegend = false; //desabilita legenda
+            
+            this.grafico1.Series["Ação"].Points.Clear();
+            this.grafico1.Series["Ação"].IsVisibleInLegend = false; //desabilita legenda
 
             // Médias móveis exponenciais
             this.grafico1.Series["MME_Rápida"].Points.Clear();
@@ -241,13 +268,28 @@ namespace FormatarHistóricoCotações
             this.grafico1.Series["BB_Sup"].Points.Clear();
 
             this.grafico1.Titles[0].Text = históricoPapel[0].CODIGO + "- " + históricoPapel[0].Nome;
-            this.grafico1.Series["Frechamento"].IsVisibleInLegend = false; //desabilita legenda
             //this.grafico1.Series[0].LegendText = "Gráfico do fechamento do papel " + hitoricoPapel[0].CODIGO; //Modifico a legenda
 
-            for (int i = 0; i < históricoPapel.Count(); i++) //Percorre todo o histórico do papel para fazer gráfico
+            #region "Teste de Candlestick"
+            //for (int i = 0; i < históricoPapel.Count(); i++) //Percorre todo o histórico do papel para fazer gráfico
+            //{
+            //    this.grafico1.Series[0].Points.AddXY(históricoPapel[i].Data, históricoPapel[i].PreçoFechamento);
+            //}
+
+            grafico1.Series["Ação"].XValueType = ChartValueType.Date;
+            grafico1.Series["Ação"].YValueType = ChartValueType.Double;
+            for (int i = 0; i < históricoPapel.Count; i++)
             {
-                this.grafico1.Series[0].Points.AddXY(históricoPapel[i].Data, históricoPapel[i].PreçoFechamento);
+                //Adicionar data e preçoMáximo
+                grafico1.Series["Ação"].Points.AddXY(históricoPapel[i].Data, históricoPapel[i].PreçoMáximo);
+                //Adicionar preçoMinimo
+                grafico1.Series["Ação"].Points[i].YValues[1] = históricoPapel[i].PreçoMínimo;
+                //Adicionar preçoAbertura
+                grafico1.Series["Ação"].Points[i].YValues[2] = históricoPapel[i].PreçoAbertura;
+                //Adicionar preçoFechamento
+                grafico1.Series["Ação"].Points[i].YValues[3] = históricoPapel[i].PreçoFechamento;
             }
+            #endregion
 
             #region "Teste da classe Média Móvel Exponencial"
 
@@ -348,5 +390,6 @@ namespace FormatarHistóricoCotações
             int período = 9;
             ÍndiceDeForçaRelativa ifr_test = new ÍndiceDeForçaRelativa(fechamentoPapel, período);
         }
+
     }
 }

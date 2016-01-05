@@ -156,11 +156,12 @@
             this.grafico1.Location = new System.Drawing.Point(511, 25);
             this.grafico1.Name = "grafico1";
             series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
             series1.Legend = "Legend1";
-            series1.Name = "Frechamento";
+            series1.Name = "Series1";
             series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series1.YValuesPerPoint = 4;
+            series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
             this.grafico1.Series.Add(series1);
             this.grafico1.Size = new System.Drawing.Size(478, 235);
             this.grafico1.TabIndex = 9;
