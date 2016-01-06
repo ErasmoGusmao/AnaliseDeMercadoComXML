@@ -271,13 +271,11 @@ namespace FormatarHistóricoCotações
             //this.grafico1.Series[0].LegendText = "Gráfico do fechamento do papel " + hitoricoPapel[0].CODIGO; //Modifico a legenda
 
             #region "Teste de Candlestick"
-            //for (int i = 0; i < históricoPapel.Count(); i++) //Percorre todo o histórico do papel para fazer gráfico
-            //{
-            //    this.grafico1.Series[0].Points.AddXY(históricoPapel[i].Data, históricoPapel[i].PreçoFechamento);
-            //}
-
-            grafico1.Series["Ação"].XValueType = ChartValueType.Date;
+            grafico1.Series["Ação"].XValueType = ChartValueType.Auto;
             grafico1.Series["Ação"].YValueType = ChartValueType.Double;
+            grafico1.Series["Ação"].IsXValueIndexed = true; //Datas com valores vazios são retirados
+            //grafico1.ChartAreas["Ação"].Axes[1].IsStartedFromZero = false; //Eixo y = [1] não começa do zero ajustado nas propriedades
+
             for (int i = 0; i < históricoPapel.Count; i++)
             {
                 //Adicionar data e preçoMáximo
@@ -298,20 +296,36 @@ namespace FormatarHistóricoCotações
             int períodoIntermediário = 15;
             int períodoLento = 20;
 
-            MédiaMóvelExponencial MME_rápida = new MédiaMóvelExponencial(históricoPapel,períodoRápido);
+            MédiaMóvelExponencial MME_rápida = new MédiaMóvelExponencial(históricoPapel, períodoRápido);
             MédiaMóvelExponencial MME_Intermediária = new MédiaMóvelExponencial(históricoPapel, períodoIntermediário);
             MédiaMóvelExponencial MME_Lenta = new MédiaMóvelExponencial(históricoPapel, períodoLento);
 
+            grafico1.Series["MME_Rápida"].IsXValueIndexed = true;
+            grafico1.Series["MME_Intermediária"].IsXValueIndexed = true;
+            grafico1.Series["MME_Lenta"].IsXValueIndexed = true;
+
+            for (int i = 0; i < períodoRápido - 1; i++)
+            {
+                this.grafico1.Series["MME_Rápida"].Points.AddXY(históricoPapel[i].Data, (históricoPapel[i].PreçoFechamento + históricoPapel[i].PreçoAbertura) / 2);
+            }
             for (int i = períodoRápido - 1; i < históricoPapel.Count(); i++)
             {
                 this.grafico1.Series["MME_Rápida"].Points.AddXY(históricoPapel[i].Data, MME_rápida.ListaDaMME[i]);
             }
 
+            for (int i = 0; i < períodoIntermediário - 1; i++)
+            {
+                this.grafico1.Series["MME_Intermediária"].Points.AddXY(históricoPapel[i].Data, (históricoPapel[i].PreçoFechamento + históricoPapel[i].PreçoAbertura) / 2);
+            }
             for (int i = períodoIntermediário - 1; i < históricoPapel.Count(); i++)
             {
                 this.grafico1.Series["MME_Intermediária"].Points.AddXY(históricoPapel[i].Data, MME_Intermediária.ListaDaMME[i]);
             }
 
+            for (int i = 0; i < períodoLento - 1; i++)
+            {
+                this.grafico1.Series["MME_Lenta"].Points.AddXY(históricoPapel[i].Data, (históricoPapel[i].PreçoFechamento + históricoPapel[i].PreçoAbertura) / 2);
+            }
             for (int i = períodoLento - 1; i < históricoPapel.Count(); i++)
             {
                 this.grafico1.Series["MME_Lenta"].Points.AddXY(históricoPapel[i].Data, MME_Lenta.ListaDaMME[i]);
@@ -322,12 +336,23 @@ namespace FormatarHistóricoCotações
             int período = 20;
             double desvMédia = 2;
 
+            grafico1.Series["MMS"].IsXValueIndexed = true;
+            grafico1.Series["BB_Inf"].IsXValueIndexed = true;
+            grafico1.Series["BB_Sup"].IsXValueIndexed = true;
+
             BandasDeBollinger bandaBollinger = new BandasDeBollinger(históricoPapel, período, desvMédia);
-            for (int i = período - 1; i < históricoPapel.Count(); i++)
+            for (int i = 0; i < período - 1; i++)
             {
-                this.grafico1.Series["MMS"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.MédiaDaBanda[i]);
-                this.grafico1.Series["BB_Inf"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.BandaInferior[i]);
-                this.grafico1.Series["BB_Sup"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.BandaSuperior[i]);
+                this.grafico1.Series["MMS"].Points.AddXY(históricoPapel[i].Data, (históricoPapel[i].PreçoFechamento + históricoPapel[i].PreçoAbertura) / 2);
+                this.grafico1.Series["BB_Inf"].Points.AddXY(históricoPapel[i].Data, (históricoPapel[i].PreçoFechamento + históricoPapel[i].PreçoAbertura) / 2);
+                this.grafico1.Series["BB_Sup"].Points.AddXY(históricoPapel[i].Data, (históricoPapel[i].PreçoFechamento + históricoPapel[i].PreçoAbertura) / 2);
+            }
+            for (int i = período-1; i < históricoPapel.Count(); i++)
+            {
+                    this.grafico1.Series["MMS"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.MédiaDaBanda[i]);
+                    this.grafico1.Series["BB_Inf"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.BandaInferior[i]);
+                    this.grafico1.Series["BB_Sup"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.BandaSuperior[i]);
+                
             }
             #endregion
 
@@ -346,6 +371,11 @@ namespace FormatarHistóricoCotações
 
             IndicadorMACD MACD = new IndicadorMACD(históricoPapel, períodoCurtoMACD, períodoLongoMACD, períodoSinalMACD);
 
+            gráfico2.Series["MACD"].IsXValueIndexed = true;
+            gráfico2.Series["LineMACD"].IsXValueIndexed = true;
+            gráfico2.Series["sinal"].IsXValueIndexed = true;
+
+
             for (int i = 0; i < históricoPapel.Count(); i++)
             {
                 this.gráfico2.Series["MACD"].Points.AddXY(históricoPapel[i].Data, MACD.HistográmaMACD[i]);
@@ -359,6 +389,8 @@ namespace FormatarHistóricoCotações
             //Limpa gráfico 3
             this.gráfico3.Series["VOLUME"].Points.Clear();
             this.gráfico3.Series["VOLUME"].LegendText = "R$ (Milhões)"; // +hitoricoPapel[0].CODIGO; //Modifico a legenda
+
+            gráfico3.Series["VOLUME"].IsXValueIndexed = true;
 
             for (int i = 0; i < históricoPapel.Count(); i++)
             {
