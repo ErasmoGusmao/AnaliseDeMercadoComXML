@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnálisePapel.cs" />
     <Compile Include="ArquivoSaídaTXT.cs" />
     <Compile Include="ArquivoSaídaXML.cs" />
     <Compile Include="BandasDeBollinger.cs" />
