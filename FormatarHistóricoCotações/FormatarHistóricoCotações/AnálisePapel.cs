@@ -15,20 +15,22 @@ namespace FormatarHistóricoCotações
     class AnálisePapel
     {
 
-        public PontuaçãoPorCategorias PontuaçãoCategoria { get; private set; } // São categorias para análise e cada categoria tem um peso correspondente
-        public Categorias StatusCategoria { get; private set; }    // Cada categoria tem um status. Exemplo: A categoria "HISTOGRAMA MACD (PICOS)" pode ter 3 status (INCONSSITÊNCIA POSITIVA,INDEFINIÇÃO,INCONSSITÊNCIA NEGATIVA)
+        public PontuaçãoPorCategorias PontuaçãoCategoria { get; private set; }  // São categorias para análise e cada categoria tem um peso correspondente
+        public Categorias StatusCategoria { get; private set; }                 // Cada categoria tem um status. Exemplo: A categoria "HISTOGRAMA MACD (PICOS)" pode ter 3 status (INCONSSITÊNCIA POSITIVA,INDEFINIÇÃO,INCONSSITÊNCIA NEGATIVA)
+        public double MontanteParaInvestir {get; private set;}                  //Montante disponível para investir
 
-        public AnálisePapel(List<Papeis> HistóricoPapel, string operação)
+        public AnálisePapel(List<Papeis> HistóricoPapel, string operação, double ParaInvestir, string tendênciaÍndice)
         {
             PontuaçãoCategoria = new PontuaçãoPorCategorias();
             StatusCategoria = new Categorias();
+            MontanteParaInvestir = ParaInvestir;
 
             TipoDeOperação(operação);                           //1o método: Tipo de operação (comprado, vendido)
             PreçoAtivo(HistóricoPapel);                         //2o método: Preço do ativo
+            VerificarPreçosDeCompra(HistóricoPapel);            //3o método: Verificar preço (pode comprar?)
+            TendênciaDoÍNDICE(tendênciaÍndice);                 //4o método: TENDÊNCIA DO ÍNDICE ANALISADO (IBOV -> alta, indefinição, baixa)
 
-            //3o método: Verificar preço (pode comprar?)
-
-            //4o método: TENDÊNCIA DO ÍNDICE ANALISADO (IBOV -> alta, indefinição, baixa)
+            
 
             //5o método: CANDEL TENDÊNCIA (alta, indefinição, baixa) (padrão do candel -> martel, enforcado, estrela cadente, etc.)
 
@@ -72,7 +74,6 @@ namespace FormatarHistóricoCotações
 
             //25o método: pontuação final (soma dos pontos)
         }
-
         // Método que define igualdade: Se |Fec - Abe| > 0 => Igualde = (+ ou - 5%|Fec - Abe|), Caso Contrário => Igualdede = (+ ou - 2,5%|Max - Min|)
 
         private void TipoDeOperação(string operação)            //1o método: Tipo de operação (comprado, vendido)
@@ -87,5 +88,58 @@ namespace FormatarHistóricoCotações
             PontuaçãoCategoria.PreçoDoAtivo = 0;
         }
 
+        private void VerificarPreçosDeCompra(List<Papeis> HistóricoPapel) //3o método: Verificar preço (pode comprar?)
+        {
+            if (MontanteParaInvestir/1000>HistóricoPapel[HistóricoPapel.Count].PreçoFechamento)     //Pode fazer compra de pelo menos 1000 ações
+            {
+                StatusCategoria.VerificaPreço = true;
+                PontuaçãoCategoria.VerificaPreço = 1;
+            }
+            else
+            {
+                StatusCategoria.VerificaPreço = false;
+                PontuaçãoCategoria.VerificaPreço = 0;
+            }
+        }
+
+        private void TendênciaDoÍNDICE(string tendênciaÍndice)          //4o método: TENDÊNCIA DO ÍNDICE ANALISADO (IBOV -> alta, indefinição, baixa)
+        {
+            if (StatusCategoria.Operação == "comprado")
+            {
+                switch (tendênciaÍndice)
+                {
+                    case "alta":
+                        StatusCategoria.TendênciaÍndice = "alta";
+                        PontuaçãoCategoria.TendênciaÍndice = 2;
+                        break;
+                    case "indefinição":
+                        StatusCategoria.TendênciaÍndice = "indefinição";
+                        PontuaçãoCategoria.TendênciaÍndice = 1;
+                        break;
+                    case "baixa":
+                        StatusCategoria.TendênciaÍndice = "baixa";
+                        PontuaçãoCategoria.TendênciaÍndice = 0;
+                        break;
+                }
+            }
+            else if (StatusCategoria.Operação == "vendido")
+            {
+                switch (tendênciaÍndice)
+                {
+                    case "alta":
+                        StatusCategoria.TendênciaÍndice = "alta";
+                        PontuaçãoCategoria.TendênciaÍndice = 0;
+                        break;
+                    case "indefinição":
+                        StatusCategoria.TendênciaÍndice = "indefinição";
+                        PontuaçãoCategoria.TendênciaÍndice = 1;
+                        break;
+                    case "baixa":
+                        StatusCategoria.TendênciaÍndice = "baixa";
+                        PontuaçãoCategoria.TendênciaÍndice = 2;
+                        break;
+                }
+            }
+        }
     }
 }
