@@ -15,17 +15,16 @@ namespace FormatarHistóricoCotações
     class AnálisePapel
     {
 
-        public List<double> PontuaçãoCategoria { get; private set; } // São categorias para análise e cada categoria tem um peso correspondente
-        public List<string> StatusCategoria { get; private set; }    // Cada categoria tem um status. Exemplo: A categoria "HISTOGRAMA MACD (PICOS)" pode ter 3 status (INCONSSITÊNCIA POSITIVA,INDEFINIÇÃO,INCONSSITÊNCIA NEGATIVA)
+        public PontuaçãoPorCategorias PontuaçãoCategoria { get; private set; } // São categorias para análise e cada categoria tem um peso correspondente
+        public Categorias StatusCategoria { get; private set; }    // Cada categoria tem um status. Exemplo: A categoria "HISTOGRAMA MACD (PICOS)" pode ter 3 status (INCONSSITÊNCIA POSITIVA,INDEFINIÇÃO,INCONSSITÊNCIA NEGATIVA)
 
         public AnálisePapel(List<Papeis> HistóricoPapel, string operação)
-        {//Chamar todos os privados métodos para alimentar as listas públicas
-            
-            //1o método: Tipo de operação (comprado, vendido)
-            TipoDeOperação(operação);
+        {
+            PontuaçãoCategoria = new PontuaçãoPorCategorias();
+            StatusCategoria = new Categorias();
 
-            //2o método: Preço do ativo
-            PreçoDoAtivo(HistóricoPapel);
+            TipoDeOperação(operação);                           //1o método: Tipo de operação (comprado, vendido)
+            PreçoAtivo(HistóricoPapel);                         //2o método: Preço do ativo
 
             //3o método: Verificar preço (pode comprar?)
 
@@ -76,14 +75,17 @@ namespace FormatarHistóricoCotações
 
         // Método que define igualdade: Se |Fec - Abe| > 0 => Igualde = (+ ou - 5%|Fec - Abe|), Caso Contrário => Igualdede = (+ ou - 2,5%|Max - Min|)
 
-        private void TipoDeOperação(string operação) //1o método: Tipo de operação (comprado, vendido)
+        private void TipoDeOperação(string operação)            //1o método: Tipo de operação (comprado, vendido)
         {
-            StatusCategoria.Add(operação); //Primeiro elemento da lista
+            StatusCategoria.Operação = operação;
+            PontuaçãoCategoria.Operação = 0;
         }
 
-        private void PreçoDoAtivo(List<Papeis> HistóricoPapel)
+        private void PreçoAtivo(List<Papeis> HistóricoPapel)    //2o método: Preço do ativo
         {
-            throw new NotImplementedException();
+            StatusCategoria.PreçoDoAtivo=HistóricoPapel[HistóricoPapel.Count].PreçoFechamento;   //Pega a ultima cotação do papel
+            PontuaçãoCategoria.PreçoDoAtivo = 0;
         }
+
     }
 }
