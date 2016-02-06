@@ -18,12 +18,14 @@ namespace FormatarHistóricoCotações
         public List<double> PontuaçãoCategoria { get; private set; } // São categorias para análise e cada categoria tem um peso correspondente
         public List<string> StatusCategoria { get; private set; }    // Cada categoria tem um status. Exemplo: A categoria "HISTOGRAMA MACD (PICOS)" pode ter 3 status (INCONSSITÊNCIA POSITIVA,INDEFINIÇÃO,INCONSSITÊNCIA NEGATIVA)
 
-        public AnálisePapel(List<Papeis> HistóricoPapel)
+        public AnálisePapel(List<Papeis> HistóricoPapel, string operação)
         {//Chamar todos os privados métodos para alimentar as listas públicas
             
             //1o método: Tipo de operação (comprado, vendido)
+            TipoDeOperação(operação);
 
             //2o método: Preço do ativo
+            PreçoDoAtivo(HistóricoPapel);
 
             //3o método: Verificar preço (pode comprar?)
 
@@ -71,7 +73,17 @@ namespace FormatarHistóricoCotações
 
             //25o método: pontuação final (soma dos pontos)
         }
+
         // Método que define igualdade: Se |Fec - Abe| > 0 => Igualde = (+ ou - 5%|Fec - Abe|), Caso Contrário => Igualdede = (+ ou - 2,5%|Max - Min|)
 
+        private void TipoDeOperação(string operação) //1o método: Tipo de operação (comprado, vendido)
+        {
+            StatusCategoria.Add(operação); //Primeiro elemento da lista
+        }
+
+        private void PreçoDoAtivo(List<Papeis> HistóricoPapel)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
