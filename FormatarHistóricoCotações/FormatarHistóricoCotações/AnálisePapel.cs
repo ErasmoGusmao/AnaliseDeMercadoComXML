@@ -27,27 +27,27 @@ namespace FormatarHistóricoCotações
         }
 
 
-        public AnálisePapel(List<Papeis> HistóricoPapel, string operação, double ParaInvestir, string tendênciaÍndice)
+        public AnálisePapel(List<Papeis> HistóricoPapel, string operação, double ParaInvestir, string tendênciaÍndice, int períodoMMELenta, int períodoMMEIntermediária, int períodoMMERápida, int períodoBandaBollinger, int períodoIFR, int períodoMACD, int períodoADX)
         {
             PontuaçãoCategoria = new PontuaçãoPorCategorias();
             StatusCategoria = new Categorias();
             MontanteParaInvestir = ParaInvestir;
 
-            TipoDeOperação(operação);                           //1o método: Tipo de operação (comprado, vendido)
-            PreçoAtivo(HistóricoPapel);                         //2o método: Preço do ativo
-            VerificarPreçosDeCompra(HistóricoPapel);            //3o método: Verificar preço (pode comprar?)
-            TendênciaDoÍNDICE(tendênciaÍndice);                 //4o método: TENDÊNCIA DO ÍNDICE ANALISADO (IBOV -> alta, indefinição, baixa)
+            TipoDeOperação(operação);                                           //1o método: Tipo de operação (comprado, vendido)
+            PreçoAtivo(HistóricoPapel);                                         //2o método: Preço do ativo
+            VerificarPreçosDeCompra(HistóricoPapel);                            //3o método: Verificar preço (pode comprar?)
+            TendênciaDoÍNDICE(tendênciaÍndice);                                 //4o método: TENDÊNCIA DO ÍNDICE ANALISADO (IBOV -> alta, indefinição, baixa)
                       
 
             //*5o método: CANDEL TENDÊNCIA (alta, indefinição, baixa) (padrão do candel -> martel, enforcado, estrela cadente, etc.)
 
             //*6o método: TENDÊNDIA INTERMEDIÁRIA ou do Papel (alta, indefinição, baixa)
 
-            FechamentoAtualAberturaAnterior(HistóricoPapel);    //7o método: Compar o FECHAMENTO ATUAL e a AERTURA ANTERIOR (Fec > Abe, Fec = Abe, Fec < Abe)
+            FechamentoAtualAberturaAnterior(HistóricoPapel);                    //7o método: Compar o FECHAMENTO ATUAL e a AERTURA ANTERIOR (Fec > Abe, Fec = Abe, Fec < Abe)
 
-            FechamentoDoCandel(HistóricoPapel);                 //8o método: FECHAMENTO DO CANDEL (Fechou em alta, próximo da abertura, fechou em baixa)
+            FechamentoDoCandel(HistóricoPapel);                                 //8o método: FECHAMENTO DO CANDEL (Fechou em alta, próximo da abertura, fechou em baixa)
 
-            //9o método: ABERTURA EM RELAÇÃO A  MÉDIA LENTA (Abe > MMELenta, Abe = MMELenta, Abe < MMELenta)
+            AberturaComMMELenta(HistóricoPapel, períodoMMELenta);               //9o método: ABERTURA EM RELAÇÃO A  MÉDIA LENTA (Abe > MMELenta, Abe = MMELenta, Abe < MMELenta)
 
             //10o método: ABERTURA EM RELAÇÃO A  MÉDIA INTERMEDIÁRIA (Abe > MMEInter, Abe = MMEInter, Abe < MMEInter)
 
@@ -81,21 +81,22 @@ namespace FormatarHistóricoCotações
 
             //25o método: pontuação final (soma dos pontos)
         }
+
         // Método que define igualdade: Se |Fec - Abe| > 0 => Igualde = (+ ou - 5%|Fec - Abe|), Caso Contrário => Igualdede = (+ ou - 2,5%|Max - Min|)
 
-        private void TipoDeOperação(string operação)                                //1o método: Tipo de operação (comprado, vendido)
+        private void TipoDeOperação(string operação)                                            //1o método: Tipo de operação (comprado, vendido)
         {
             StatusCategoria.Operação = operação;
             PontuaçãoCategoria.Operação = 0;
         }
 
-        private void PreçoAtivo(List<Papeis> HistóricoPapel)                        //2o método: Preço do ativo
+        private void PreçoAtivo(List<Papeis> HistóricoPapel)                                    //2o método: Preço do ativo
         {
             StatusCategoria.PreçoDoAtivo=HistóricoPapel[HistóricoPapel.Count].PreçoFechamento;   //Pega a ultima cotação do papel
             PontuaçãoCategoria.PreçoDoAtivo = 0;
         }
 
-        private void VerificarPreçosDeCompra(List<Papeis> HistóricoPapel)           //3o método: Verificar preço (pode comprar?)
+        private void VerificarPreçosDeCompra(List<Papeis> HistóricoPapel)                       //3o método: Verificar preço (pode comprar?)
         {
             if (MontanteParaInvestir/1000>HistóricoPapel[HistóricoPapel.Count].PreçoFechamento)     //Pode fazer compra de pelo menos 1000 ações
             {
@@ -109,7 +110,7 @@ namespace FormatarHistóricoCotações
             }
         }
 
-        private void TendênciaDoÍNDICE(string tendênciaÍndice)                      //4o método: TENDÊNCIA DO ÍNDICE ANALISADO (IBOV -> alta, indefinição, baixa)
+        private void TendênciaDoÍNDICE(string tendênciaÍndice)                                  //4o método: TENDÊNCIA DO ÍNDICE ANALISADO (IBOV -> alta, indefinição, baixa)
         {
             if (StatusCategoria.Operação == "comprado")
             {
@@ -156,7 +157,7 @@ namespace FormatarHistóricoCotações
         //*5o método: CANDEL TENDÊNCIA (alta, indefinição, baixa) (padrão do candel -> martel, enforcado, estrela cadente, etc.)
         //*6o método: TENDÊNDIA INTERMEDIÁRIA ou do Papel (alta, indefinição, baixa)
 
-        private void FechamentoAtualAberturaAnterior(List<Papeis> HistóricoPapel)   //7o método: Compar o FECHAMENTO ATUAL e a AERTURA ANTERIOR (Fec > Abe, Fec = Abe, Fec < Abe)
+        private void FechamentoAtualAberturaAnterior(List<Papeis> HistóricoPapel)               //7o método: Compar o FECHAMENTO ATUAL e a AERTURA ANTERIOR (Fec > Abe, Fec = Abe, Fec < Abe)
         {
             if (StatusCategoria.Operação=="comprado")
             {
@@ -200,43 +201,43 @@ namespace FormatarHistóricoCotações
             }
         }
 
-        private void FechamentoDoCandel(List<Papeis> HistóricoPapel)                //8o método: FECHAMENTO DO CANDEL (Fechou em alta, próximo da abertura, fechou em baixa)
+        private void FechamentoDoCandel(List<Papeis> HistóricoPapel)                            //8o método: FECHAMENTO DO CANDEL (Fechou em alta, próximo da abertura, fechou em baixa)
         {
 
             if (StatusCategoria.Operação == "comprado")
             {
                 if (HistóricoPapel[HistóricoPapel.Count].PreçoFechamento > (1.05) * HistóricoPapel[HistóricoPapel.Count].PreçoAbertura)                  //Se FechamentoAtual > 1,05*AberturaAtual (fechamento atual 5% maior que a abertura atual)
                 {
-                    StatusCategoria.FechamentoEAberturarAnteriorPapel = Tendência.Alta.ToString();
-                    PontuaçãoCategoria.FechamentoEAberturarAnteriorPapel = 2;
+                    StatusCategoria.FechamentoCandel = Tendência.Alta.ToString();
+                    PontuaçãoCategoria.FechamentoCandel = 2;
                 }
                 else if (HistóricoPapel[HistóricoPapel.Count].PreçoFechamento < (0.95) * HistóricoPapel[HistóricoPapel.Count].PreçoAbertura)           //Se FechamentoAtual < 0,95*AberturaAtual (fechamento atual 5% menor que a abertura atual)
                 {
-                    StatusCategoria.FechamentoEAberturarAnteriorPapel = Tendência.Baixa.ToString();
-                    PontuaçãoCategoria.FechamentoEAberturarAnteriorPapel = 0;
+                    StatusCategoria.FechamentoCandel = Tendência.Baixa.ToString();
+                    PontuaçãoCategoria.FechamentoCandel = 0;
                 }
                 else//Igualdade                                                                                                                          //Se 0,95*AberturaAtual <= FechamentoAtual <= 1,05*AberturaAtual (fechamento atual entre + ou - 5% da abertura atual)
                 {
-                    StatusCategoria.FechamentoEAberturarAnteriorPapel = Tendência.Indefinição.ToString();
-                    PontuaçãoCategoria.FechamentoEAberturarAnteriorPapel = 1;
+                    StatusCategoria.FechamentoCandel = Tendência.Indefinição.ToString();
+                    PontuaçãoCategoria.FechamentoCandel = 1;
                 }
             }
             else if (StatusCategoria.Operação == "vendido")
             {
                 if (HistóricoPapel[HistóricoPapel.Count].PreçoFechamento > (1.05) * HistóricoPapel[HistóricoPapel.Count].PreçoAbertura)                  //Se FechamentoAtual > 1,05*AberturaAtual (fechamento atual 5% maior que a abertura atual)
                 {
-                    StatusCategoria.FechamentoEAberturarAnteriorPapel = Tendência.Alta.ToString();
-                    PontuaçãoCategoria.FechamentoEAberturarAnteriorPapel = 0;
+                    StatusCategoria.FechamentoCandel = Tendência.Alta.ToString();
+                    PontuaçãoCategoria.FechamentoCandel = 0;
                 }
                 else if (HistóricoPapel[HistóricoPapel.Count].PreçoFechamento < (0.95) * HistóricoPapel[HistóricoPapel.Count].PreçoAbertura)           //Se FechamentoAtual < 0,95*AberturaAnterior (fechamento atual 5% menor que a abertura anterior)
                 {
-                    StatusCategoria.FechamentoEAberturarAnteriorPapel = Tendência.Baixa.ToString();
-                    PontuaçãoCategoria.FechamentoEAberturarAnteriorPapel = 2;
+                    StatusCategoria.FechamentoCandel = Tendência.Baixa.ToString();
+                    PontuaçãoCategoria.FechamentoCandel = 2;
                 }
                 else//Igualdade                                                                                                                          //Se 0,95*AberturaAnterior <= FechamentoAtual <= 1,05*AberturaAnterior (fechamento atual entre + ou - 5% da abertura anterior)
                 {
-                    StatusCategoria.FechamentoEAberturarAnteriorPapel = Tendência.Indefinição.ToString();
-                    PontuaçãoCategoria.FechamentoEAberturarAnteriorPapel = 1;
+                    StatusCategoria.FechamentoCandel = Tendência.Indefinição.ToString();
+                    PontuaçãoCategoria.FechamentoCandel = 1;
                 }
             }
             else
@@ -244,5 +245,52 @@ namespace FormatarHistóricoCotações
                 MessageBox.Show("Tipo de operação não informada", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void AberturaComMMELenta(List<Papeis> HistóricoPapel, int períodoMMELenta)      //9o método: ABERTURA EM RELAÇÃO A  MÉDIA LENTA (Abe > MMELenta, Abe = MMELenta, Abe < MMELenta)
+        {
+            MédiaMóvelExponencial MMELenta = new MédiaMóvelExponencial(HistóricoPapel, períodoMMELenta);
+
+            if (StatusCategoria.Operação == "comprado")
+            {
+                if (HistóricoPapel[HistóricoPapel.Count].PreçoAbertura > (1.05) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])                        //Se Abertura > 1,05*MMELenta (abertura atual 5% maior que a MMELenta) // Comparo com o ultimo elemento da MMELenta
+                {
+                    StatusCategoria.AberturaEMédiaLenta = Tendência.Alta.ToString();
+                    PontuaçãoCategoria.AberturaEMédiaLenta = 2;
+                }
+                else if (HistóricoPapel[HistóricoPapel.Count].PreçoAbertura < (0.95) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])                 //Se Abertura < 0,95*MMELenta (abertura atual 5% menor que a MMELenta) // Comparo com o ultimo elemento da MMELenta
+                {
+                    StatusCategoria.AberturaEMédiaLenta = Tendência.Baixa.ToString();
+                    PontuaçãoCategoria.AberturaEMédiaLenta = 0;
+                }
+                else//Igualdade                                                                                                                          //Se 0,95*MMELenta <= Abertura <= 1,05*MMELenta (fechamento atual entre + ou - 5% da abertura atual)
+                {
+                    StatusCategoria.AberturaEMédiaLenta = Tendência.Indefinição.ToString();
+                    PontuaçãoCategoria.AberturaEMédiaLenta = 1;
+                }
+            }
+            else if (StatusCategoria.Operação == "vendido")
+            {
+                if (HistóricoPapel[HistóricoPapel.Count].PreçoAbertura > (1.05) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])                  //Se Abertura > 1,05*MMELenta (abertura atual 5% maior que a MMELenta) // Comparo com o ultimo elemento da MMELenta
+                {
+                    StatusCategoria.AberturaEMédiaLenta = Tendência.Alta.ToString();
+                    PontuaçãoCategoria.AberturaEMédiaLenta = 0;
+                }
+                else if (HistóricoPapel[HistóricoPapel.Count].PreçoAbertura < (0.95) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])           //Se Abertura < 0,95*MMELenta (abertura atual 5% menor que a MMELenta) // Comparo com o ultimo elemento da MMELenta
+                {
+                    StatusCategoria.AberturaEMédiaLenta = Tendência.Baixa.ToString();
+                    PontuaçãoCategoria.AberturaEMédiaLenta = 2;
+                }
+                else//Igualdade                                                                                                                           //Se 0,95*MMELenta <= Abertura <= 1,05*MMELenta (fechamento atual entre + ou - 5% da abertura atual)
+                {
+                    StatusCategoria.AberturaEMédiaLenta = Tendência.Indefinição.ToString();
+                    PontuaçãoCategoria.AberturaEMédiaLenta = 1;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Tipo de operação não informada", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    
     }
 }

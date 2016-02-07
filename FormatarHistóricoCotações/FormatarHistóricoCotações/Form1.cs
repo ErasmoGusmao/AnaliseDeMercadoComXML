@@ -66,7 +66,7 @@ namespace FormatarHistóricoCotações
 
             #endregion
 
-            #region "Inicialização do gráfico 1 Médias móveis Exponenciais"
+            #region "Inicialização do gráfico 1 Médias móveis Exponenciais e Banda de Bollinger"
             //Novas séries gráfico 1
             grafico1.Series.Add("MME_Rápida");
             grafico1.Series["MME_Rápida"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -333,21 +333,21 @@ namespace FormatarHistóricoCotações
             #endregion
 
             #region "Teste das Bandas de Bollinger"
-            int período = 20;
+            int períodoBB = 20;
             double desvMédia = 2;
 
             grafico1.Series["MMS"].IsXValueIndexed = true;
             grafico1.Series["BB_Inf"].IsXValueIndexed = true;
             grafico1.Series["BB_Sup"].IsXValueIndexed = true;
 
-            BandasDeBollinger bandaBollinger = new BandasDeBollinger(históricoPapel, período, desvMédia);
-            for (int i = 0; i < período - 1; i++)
+            BandasDeBollinger bandaBollinger = new BandasDeBollinger(históricoPapel, períodoBB, desvMédia);
+            for (int i = 0; i < períodoBB - 1; i++)
             {
                 this.grafico1.Series["MMS"].Points.AddXY(históricoPapel[i].Data, (históricoPapel[i].PreçoFechamento + históricoPapel[i].PreçoAbertura) / 2);
                 this.grafico1.Series["BB_Inf"].Points.AddXY(históricoPapel[i].Data, (históricoPapel[i].PreçoFechamento + históricoPapel[i].PreçoAbertura) / 2);
                 this.grafico1.Series["BB_Sup"].Points.AddXY(históricoPapel[i].Data, (históricoPapel[i].PreçoFechamento + históricoPapel[i].PreçoAbertura) / 2);
             }
-            for (int i = período-1; i < históricoPapel.Count(); i++)
+            for (int i = períodoBB-1; i < históricoPapel.Count(); i++)
             {
                     this.grafico1.Series["MMS"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.MédiaDaBanda[i]);
                     this.grafico1.Series["BB_Inf"].Points.AddXY(históricoPapel[i].Data, bandaBollinger.BandaInferior[i]);
