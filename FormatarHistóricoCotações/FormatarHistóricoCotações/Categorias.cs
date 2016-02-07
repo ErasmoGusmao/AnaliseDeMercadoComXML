@@ -13,11 +13,11 @@ namespace FormatarHistóricoCotações
 
         public double PreçoDoAtivo;                             //2o método: Preço do ativo
 
-        public double VerificaPreço;                            //3o método: Verificar preço (pode comprar?)
+        public bool VerificaPreço;                              //3o método: Verificar preço (pode comprar?)
 
         public string TendênciaÍndice;                          //4o método: TENDÊNCIA DO ÍNDICE ANALISADO (IBOV -> alta, indefinição, baixa)
 
-        public string TendênciaCandel;                         //5o método: CANDEL TENDÊNCIA (alta, indefinição, baixa) (padrão do candel -> martel, enforcado, estrela cadente, etc.)
+        public string TendênciaCandel;                          //5o método: CANDEL TENDÊNCIA (alta, indefinição, baixa) (padrão do candel -> martel, enforcado, estrela cadente, etc.)
 
         public string TendênciaPapel;                           //6o método: TENDÊNDIA INTERMEDIÁRIA ou do Papel (alta, indefinição, baixa)
 
