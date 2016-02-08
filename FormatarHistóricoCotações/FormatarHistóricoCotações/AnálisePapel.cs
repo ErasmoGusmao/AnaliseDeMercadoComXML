@@ -29,7 +29,7 @@ namespace FormatarHistóricoCotações
         }
 
 
-        public AnálisePapel(List<Papeis> HistóricoPapel, string operação, double ParaInvestir, string tendênciaÍndice, int períodoMMELenta, int períodoMMEIntermediária, int períodoMMERápida, int períodoBandaBollinger, int períodoIFR, int períodoMACD, int períodoADX)
+        public AnálisePapel(List<Papeis> HistóricoPapel, string operação, double ParaInvestir, string tendênciaÍndice, int períodoMMELenta, int períodoMMEIntermediária, int períodoMMERápida, int períodoBandaBollinger, double desvioMédiaBandaBollinger, int períodoIFR, int períodoMACD, int períodoADX)
         {
             PontuaçãoCategoria = new PontuaçãoPorCategorias();
             CategoriaStatus = new Categorias();
@@ -65,7 +65,7 @@ namespace FormatarHistóricoCotações
 
             ComparaMMERápidaLenta(HistóricoPapel, períodoMMELenta, períodoMMERápida);                   //16o método: MÉDIA RÁPIDA vs. MÉDIA LENTA (MMERápida > MMELenta, MMERápida = MMELenta, MMERápida < MMELenta)
 
-            //17o método: BANDAS DE BOLLINGER (Fechou acima da superior, fechou próxima da superior, entre a superior e a média, próximo da média, entre a média e a inferior, próximo da inferior, fechou abaixo da inferior)
+            FechamentoBandasDeBollinger(HistóricoPapel, períodoBandaBollinger, desvioMédiaBandaBollinger);                         //17o método: BANDAS DE BOLLINGER (Fechou acima da superior, fechou próxima da superior, entre a superior e a média, próximo da média, entre a média e a inferior, próximo da inferior, fechou abaixo da inferior)
 
             //18o método: HISTOGRAMA MACD (PICOS) (Inconsistência positiva, Indefinição, Inconsistência negativa)
 
@@ -83,8 +83,6 @@ namespace FormatarHistóricoCotações
 
             //25o método: pontuação final (soma dos pontos)
         }
-
-
         // Método que define igualdade: Se |Fec - Abe| > 0 => Igualde = (+ ou - 5%|Fec - Abe|), Caso Contrário => Igualdede = (+ ou - 2,5%|Max - Min|)
 
         private void TipoDeOperação(string operação)                                                                                    //1o método: Tipo de operação (comprado, vendido)
@@ -538,42 +536,84 @@ namespace FormatarHistóricoCotações
             //Intervalo de tolerância para análise
             double muito = 0.01;                    //+ ou - 1% de tolerância
             double pouco = 0.005;                   //+ ou - 0,5% de tolerância
-
+            if (CategoriaStatus.Operação =="comprado")
+            {
             #region"Comparar PreçoMédio com a Média_das_MME"
             
             if (preçoMédio > (1 + muito) * Média_das_MME || preçoMédio < (1 - muito) * Média_das_MME)     //testa se o preço média é 1% maior ou 1% menor que a média das MME
             {
-                PontuaçãoCategoria.CandelEMédias = 0;
-                
                 if (preçoMédio > (1 + muito) * Média_das_MME)
                 {
                     CategoriaStatus.CandelEMédias = "muito acima";
+                    PontuaçãoCategoria.CandelEMédias = 0;
                 }
                 else
                 {
                     CategoriaStatus.CandelEMédias = "muito abaixo";
+                    PontuaçãoCategoria.CandelEMédias = 0.5;
                 }
             }
             if ((preçoMédio > (1+pouco)*Média_das_MME && preçoMédio < (1+muito)*Média_das_MME)||(preçoMédio > (1-muito)*Média_das_MME && preçoMédio < (1-pouco)*Média_das_MME))
             {
-                PontuaçãoCategoria.CandelEMédias = 1.5;
-
                 if (preçoMédio > (1+pouco)*Média_das_MME && preçoMédio < (1+muito)*Média_das_MME)
                 {
                     CategoriaStatus.CandelEMédias = "pouco acima";
+                    PontuaçãoCategoria.CandelEMédias = 1.5;
                 }
                 else
                 {
                     CategoriaStatus.CandelEMédias = "pouco abaixo";
+                    PontuaçãoCategoria.CandelEMédias = 1.5;
                 }
             }
             if (preçoMédio > (1 - pouco)*Média_das_MME && preçoMédio < (1 + pouco)*Média_das_MME)
             {
                 PontuaçãoCategoria.CandelEMédias = 3;
-
                 CategoriaStatus.CandelEMédias = "próximo das médias";
             }
-            #endregion
+            #endregion   
+            }
+            else if (CategoriaStatus.Operação =="vendido")
+            {
+            #region"Comparar PreçoMédio com a Média_das_MME"
+
+                if (preçoMédio > (1 + muito) * Média_das_MME || preçoMédio < (1 - muito) * Média_das_MME)     //testa se o preço média é 1% maior ou 1% menor que a média das MME
+                {
+                    if (preçoMédio > (1 + muito) * Média_das_MME)
+                    {
+                        CategoriaStatus.CandelEMédias = "muito acima";
+                        PontuaçãoCategoria.CandelEMédias = 0.5;
+                    }
+                    else
+                    {
+                        CategoriaStatus.CandelEMédias = "muito abaixo";
+                        PontuaçãoCategoria.CandelEMédias = 0;
+                    }
+                }
+                if ((preçoMédio > (1 + pouco) * Média_das_MME && preçoMédio < (1 + muito) * Média_das_MME) || (preçoMédio > (1 - muito) * Média_das_MME && preçoMédio < (1 - pouco) * Média_das_MME))
+                {
+                    if (preçoMédio > (1 + pouco) * Média_das_MME && preçoMédio < (1 + muito) * Média_das_MME)
+                    {
+                        CategoriaStatus.CandelEMédias = "pouco acima";
+                        PontuaçãoCategoria.CandelEMédias = 1.5;
+                    }
+                    else
+                    {
+                        CategoriaStatus.CandelEMédias = "pouco abaixo";
+                        PontuaçãoCategoria.CandelEMédias = 1.5;
+                    }
+                }
+                if (preçoMédio > (1 - pouco) * Média_das_MME && preçoMédio < (1 + pouco) * Média_das_MME)
+                {
+                    PontuaçãoCategoria.CandelEMédias = 3;
+                    CategoriaStatus.CandelEMédias = "próximo das médias";
+                }
+                #endregion   
+            }
+            else
+            {
+                MessageBox.Show("Tipo de operação não informada", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
 
@@ -589,7 +629,7 @@ namespace FormatarHistóricoCotações
                     CategoriaStatus.MédiaRápidaeLenta = Tendência.Alta.ToString();
                     PontuaçãoCategoria.MédiaRápidaeLenta = 2;
                 } 
-                else if (MMERápida.ListaDaMME[MMERápida.ListaDaMME.Count] < (1 + tolerânciaIgualdade) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])//MMERápida > MMELenta
+                else if (MMERápida.ListaDaMME[MMERápida.ListaDaMME.Count] < (1 - tolerânciaIgualdade) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])//MMERápida > MMELenta
                 {
                     CategoriaStatus.MédiaRápidaeLenta = Tendência.Baixa.ToString();
                     PontuaçãoCategoria.MédiaRápidaeLenta = 0;
@@ -607,7 +647,7 @@ namespace FormatarHistóricoCotações
                     CategoriaStatus.MédiaRápidaeLenta = Tendência.Alta.ToString();
                     PontuaçãoCategoria.MédiaRápidaeLenta = 0;
                 } 
-                else if (MMERápida.ListaDaMME[MMERápida.ListaDaMME.Count] < (1 + tolerânciaIgualdade) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])//MMERápida > MMELenta
+                else if (MMERápida.ListaDaMME[MMERápida.ListaDaMME.Count] < (1 - tolerânciaIgualdade) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])//MMERápida > MMELenta
                 {
                     CategoriaStatus.MédiaRápidaeLenta = Tendência.Baixa.ToString();
                     PontuaçãoCategoria.MédiaRápidaeLenta = 2;
@@ -616,6 +656,97 @@ namespace FormatarHistóricoCotações
                 {
                     CategoriaStatus.MédiaRápidaeLenta = Tendência.Indefinição.ToString();
                     PontuaçãoCategoria.MédiaRápidaeLenta = 1;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Tipo de operação não informada", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void FechamentoBandasDeBollinger(List<Papeis> HistóricoPapel, int períodoBandaBollinger,double desvioMédiaBandaBollinger)                                //17o método: BANDAS DE BOLLINGER (Fechou acima da superior, fechou próxima da superior, entre a superior e a média, próximo da média, entre a média e a inferior, próximo da inferior, fechou abaixo da inferior)
+        {
+            BandasDeBollinger BandaBollinger = new BandasDeBollinger(HistóricoPapel, períodoBandaBollinger, desvioMédiaBandaBollinger);
+
+            double bandaSuperior = BandaBollinger.BandaSuperior[BandaBollinger.BandaSuperior.Count];
+            double bandaInferior = BandaBollinger.BandaInferior[BandaBollinger.BandaInferior.Count];
+            double médiaBanda = BandaBollinger.MédiaDaBanda[BandaBollinger.MédiaDaBanda.Count];
+            double fechamento = HistóricoPapel[HistóricoPapel.Count].PreçoFechamento;
+
+            if (CategoriaStatus.Operação =="comprado")
+            {
+                if (fechamento > (1 + tolerânciaIgualdade) * bandaSuperior)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "acima da superior";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 0;
+                }
+                else if (fechamento < (1+tolerânciaIgualdade)*bandaSuperior && fechamento > (1-tolerânciaIgualdade)*bandaSuperior) //Na banda superior
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "próximo da superior";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 0.5;
+                }
+                else if (fechamento > (1 + tolerânciaIgualdade) * médiaBanda && fechamento < (1 - tolerânciaIgualdade) * bandaSuperior)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "entre a superior e a média";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 2;
+                }
+                else if (fechamento <(1+tolerânciaIgualdade)*médiaBanda && fechamento > (1-tolerânciaIgualdade)*médiaBanda)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "próximo da média";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 4;
+                }
+                else if (fechamento < (1-tolerânciaIgualdade)*médiaBanda && fechamento > (1+tolerânciaIgualdade)*bandaInferior)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "entre a inferior e a média";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 0.5;
+                }
+                else if (fechamento < (1+tolerânciaIgualdade)*bandaInferior && fechamento > (1-tolerânciaIgualdade)*bandaInferior)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "próximo da inferior";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 1;
+                }
+                else if (fechamento < (1-tolerânciaIgualdade)*bandaInferior)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "abaixo da inferior";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 1.5;
+                }
+            }
+            else if (CategoriaStatus.Operação =="vendido")
+            {
+                if (fechamento > (1 + tolerânciaIgualdade) * bandaSuperior)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "acima da superior";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 1.5;
+                }
+                else if (fechamento < (1 + tolerânciaIgualdade) * bandaSuperior && fechamento > (1 - tolerânciaIgualdade) * bandaSuperior) //Na banda superior
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "próximo da superior";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 1;
+                }
+                else if (fechamento > (1 + tolerânciaIgualdade) * médiaBanda && fechamento < (1 - tolerânciaIgualdade) * bandaSuperior)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "entre a superior e a média";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 0.5;
+                }
+                else if (fechamento < (1 + tolerânciaIgualdade) * médiaBanda && fechamento > (1 - tolerânciaIgualdade) * médiaBanda)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "próximo da média";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 4;
+                }
+                else if (fechamento < (1 - tolerânciaIgualdade) * médiaBanda && fechamento > (1 + tolerânciaIgualdade) * bandaInferior)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "entre a inferior e a média";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 2;
+                }
+                else if (fechamento < (1 + tolerânciaIgualdade) * bandaInferior && fechamento > (1 - tolerânciaIgualdade) * bandaInferior)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "próximo da inferior";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 0.5;
+                }
+                else if (fechamento < (1 - tolerânciaIgualdade) * bandaInferior)
+                {
+                    CategoriaStatus.FechamentoBandasDeBollinger = "abaixo da inferior";
+                    PontuaçãoCategoria.FechamentoBandasDeBollinger = 0;
                 }
             }
             else
