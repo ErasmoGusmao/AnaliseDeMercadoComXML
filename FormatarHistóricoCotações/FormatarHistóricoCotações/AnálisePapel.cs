@@ -63,7 +63,7 @@ namespace FormatarHistóricoCotações
 
             CandelEMédias(HistóricoPapel, períodoMMELenta, períodoMMEIntermediária, períodoMMERápida);  //15o método: PROXIMIDADE DO CANDEL & MÉDIAS MÓVEIS (Muito acima, pouco acima, próximo das médias, pouco abaixo, Muito abaixo)
 
-            //16o método: MÉDIA RÁPIDA vs. MÉDIA LENTA (MMERápida > MMELenta, MMERápida = MMELenta, MMERápida < MMELenta)
+            ComparaMMERápidaLenta(HistóricoPapel, períodoMMELenta, períodoMMERápida);                   //16o método: MÉDIA RÁPIDA vs. MÉDIA LENTA (MMERápida > MMELenta, MMERápida = MMELenta, MMERápida < MMELenta)
 
             //17o método: BANDAS DE BOLLINGER (Fechou acima da superior, fechou próxima da superior, entre a superior e a média, próximo da média, entre a média e a inferior, próximo da inferior, fechou abaixo da inferior)
 
@@ -83,6 +83,7 @@ namespace FormatarHistóricoCotações
 
             //25o método: pontuação final (soma dos pontos)
         }
+
 
         // Método que define igualdade: Se |Fec - Abe| > 0 => Igualde = (+ ou - 5%|Fec - Abe|), Caso Contrário => Igualdede = (+ ou - 2,5%|Max - Min|)
 
@@ -574,6 +575,53 @@ namespace FormatarHistóricoCotações
             }
             #endregion
 
+        }
+
+        private void ComparaMMERápidaLenta(List<Papeis> HistóricoPapel, int períodoMMELenta, int períodoMMERápida)                      //16o método: MÉDIA RÁPIDA vs. MÉDIA LENTA (MMERápida > MMELenta, MMERápida = MMELenta, MMERápida < MMELenta)
+        {
+            MédiaMóvelExponencial MMERápida = new MédiaMóvelExponencial(HistóricoPapel, períodoMMERápida);
+            MédiaMóvelExponencial MMELenta = new MédiaMóvelExponencial(HistóricoPapel, períodoMMELenta);
+
+            if (CategoriaStatus.Operação == "comprado")
+            {
+                if (MMERápida.ListaDaMME[MMERápida.ListaDaMME.Count] > (1 + tolerânciaIgualdade) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])//MMERápida > MMELenta
+                {
+                    CategoriaStatus.MédiaRápidaeLenta = Tendência.Alta.ToString();
+                    PontuaçãoCategoria.MédiaRápidaeLenta = 2;
+                } 
+                else if (MMERápida.ListaDaMME[MMERápida.ListaDaMME.Count] < (1 + tolerânciaIgualdade) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])//MMERápida > MMELenta
+                {
+                    CategoriaStatus.MédiaRápidaeLenta = Tendência.Baixa.ToString();
+                    PontuaçãoCategoria.MédiaRápidaeLenta = 0;
+                }
+                else//Igualdade
+                {
+                    CategoriaStatus.MédiaRápidaeLenta = Tendência.Indefinição.ToString();
+                    PontuaçãoCategoria.MédiaRápidaeLenta = 1;
+                }
+            } 
+            if (CategoriaStatus.Operação == "vendido")
+            {
+                if (MMERápida.ListaDaMME[MMERápida.ListaDaMME.Count] > (1 + tolerânciaIgualdade) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])//MMERápida > MMELenta
+                {
+                    CategoriaStatus.MédiaRápidaeLenta = Tendência.Alta.ToString();
+                    PontuaçãoCategoria.MédiaRápidaeLenta = 0;
+                } 
+                else if (MMERápida.ListaDaMME[MMERápida.ListaDaMME.Count] < (1 + tolerânciaIgualdade) * MMELenta.ListaDaMME[MMELenta.ListaDaMME.Count])//MMERápida > MMELenta
+                {
+                    CategoriaStatus.MédiaRápidaeLenta = Tendência.Baixa.ToString();
+                    PontuaçãoCategoria.MédiaRápidaeLenta = 2;
+                }
+                else//Igualdade
+                {
+                    CategoriaStatus.MédiaRápidaeLenta = Tendência.Indefinição.ToString();
+                    PontuaçãoCategoria.MédiaRápidaeLenta = 1;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Tipo de operação não informada", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
