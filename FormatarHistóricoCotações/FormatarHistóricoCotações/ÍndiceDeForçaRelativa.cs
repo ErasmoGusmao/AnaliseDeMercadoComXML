@@ -67,19 +67,6 @@ namespace FormatarHistóricoCotações
                 variação.Add(fechamento[i]-fechamento[i-1]);
             }
 
-            //foreach (double valor in variação)
-            //{
-            //    if (valor > 0)
-            //    {
-            //        varPositiva.Add(valor);
-            //        varNegativa.Add(0);
-            //    } 
-            //    if (valor<0)
-            //    {
-            //        varPositiva.Add(0);
-            //        varNegativa.Add(-valor);
-            //    }
-            //}
             for (int i = 0; i < variação.Count; i++)
 			{
                 if (variação[i]>=0)
@@ -103,19 +90,6 @@ namespace FormatarHistóricoCotações
                 variação.Add(HistóricoPapel[i].PreçoFechamento - HistóricoPapel[i - 1].PreçoFechamento);
             }
 
-            //foreach (double valor in variação)
-            //{
-            //    if (valor > 0)
-            //    {
-            //        varPositiva.Add(valor);
-            //        varNegativa.Add(0);
-            //    }
-            //    if (valor < 0)
-            //    {
-            //        varPositiva.Add(0);
-            //        varNegativa.Add(-valor);
-            //    }
-            //}
             for (int i = 0; i < variação.Count; i++)
             {
                 if (variação[i] >= 0)
