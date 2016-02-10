@@ -51,7 +51,7 @@ namespace FormatarHistóricoCotações
 
         public string VolumeFinanceiro;                         //21o método: Volume financeiro (Acima da média, próximo da média, abaixo da média)
 
-        public double NúmeroDeOperações;                        //22o método: Nº DE OPERAÇÃO (>2000, 1000< No < 2000, <1000)
+        public double NúmeroDeOperações;                        //22o método: Nº DE OPERAÇÃO (>2000, 1000< No < 2000, <1000) Total de negócios
 
         public string ForçaDaTendênciaDMI;                      //23o método: DMI ( FORÇA DA TENDÊNCIA ) (Muito aberto e positivo, pouco aberto e positivo, próximas, pouco aberto e negativo, muito aberto e negativo)
 

@@ -75,7 +75,7 @@ namespace FormatarHistóricoCotações
 
             VolumeFinanceiro(HistóricoPapel);                                                               //21o método: Volume financeiro (Acima da média, próximo da média, abaixo da média)
 
-            //22o método: Nº DE OPERAÇÃO (>2000, 1000< No < 2000, <1000)
+            NúmeroDeOperações(HistóricoPapel);                                                              //22o método: Nº DE OPERAÇÃO (>2000, 1000< No < 2000, <1000)
 
             //23o método: DMI ( FORÇA DA TENDÊNCIA ) (Muito aberto e positivo, pouco aberto e positivo, próximas, pouco aberto e negativo, muito aberto e negativo)
 
@@ -83,6 +83,7 @@ namespace FormatarHistóricoCotações
 
             //25o método: pontuação final (soma dos pontos)
         }
+
 
         private void TipoDeOperação(string operação)                                                                                        //1o método: Tipo de operação (comprado, vendido)
         {
@@ -839,7 +840,7 @@ namespace FormatarHistóricoCotações
             }
         }
 
-        private void VolumeFinanceiro(List<Papeis> HistóricoPapel)//21o método: Volume financeiro (Acima da média, próximo da média, abaixo da média)
+        private void VolumeFinanceiro(List<Papeis> HistóricoPapel)                                                                          //21o método: Volume financeiro (Acima da média, próximo da média, abaixo da média)
         {
             int períodoVolume = 60; //Analisar o volume financeiro numa janela de 60 períodos
             MédiaMóvelSimples MMS = new MédiaMóvelSimples(HistóricoPapel, períodoVolume);
@@ -861,6 +862,27 @@ namespace FormatarHistóricoCotações
             {
                 CategoriaStatus.VolumeFinanceiro = "próximo da média";
                 PontuaçãoCategoria.VolumeFinanceiro = 1;
+            }
+        }
+
+        private void NúmeroDeOperações(List<Papeis> HistóricoPapel)                                                                         //22o método: Nº DE OPERAÇÃO (>2000, 1000< No < 2000, <1000)
+        {
+            double negócios = HistóricoPapel[HistóricoPapel.Count].TotalDeNegocios;
+
+            if (negócios > 2000)
+            {
+                CategoriaStatus.NúmeroDeOperações = negócios;
+                PontuaçãoCategoria.NúmeroDeOperações = 2;
+            }
+            else if (negócios< 1000)
+            {
+                CategoriaStatus.NúmeroDeOperações = negócios;
+                PontuaçãoCategoria.NúmeroDeOperações = 0;
+            }
+            else//Entre 1000 e 2000
+            {
+                CategoriaStatus.NúmeroDeOperações = negócios;
+                PontuaçãoCategoria.NúmeroDeOperações = 1;
             }
         }
     }
